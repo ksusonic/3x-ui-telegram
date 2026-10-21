@@ -1,0 +1,24 @@
+[project]
+name = "private-vpn-bot"
+version = "0.1.0"
+description = "Private Telegram interface for existing 3x-ui clients"
+requires-python = ">=3.12,<3.15"
+dependencies = [
+  "aiogram>=3.22,<4",
+  "httpx>=0.28,<0.29",
+  "qrcode[pil]>=8.2,<9",
+]
+
+[dependency-groups]
+dev = ["pytest>=8,<10", "pytest-asyncio>=1,<2", "ruff>=0.14,<1"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "ASYNC"]
