@@ -255,6 +255,7 @@ httpx2==2.16.0 \
     --hash=sha256:0d54c98128e8f2ff7fbbde0fca8c359e5f032edeaaaac443cdb7f31f685bcd7f \
     --hash=sha256:fd2c5d7909e8d86fe92d53020c310ca0e4e431b838c207c5754b9bbf0308d49a
     # via
+    #   private-vpn-bot
     #   vercel-internal-core
     #   vercel-oidc
     #   vercel-queue

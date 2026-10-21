@@ -6,10 +6,11 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.types import LinkPreviewOptions, Update
-from vercel.queue import QueueError, RetryAfter, send, subscribe
+from vercel.queue import QueueError, RetryAfter, subscribe
 
 from .cloud_config import CloudConfig
 from .handlers import create_router
+from .network import publish as send
 from .panel import Panel
 from .postgres import PostgresStore
 from .web import TOPIC

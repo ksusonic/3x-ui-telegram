@@ -1,5 +1,4 @@
 CREATE SCHEMA IF NOT EXISTS vpn_bot;
-REVOKE ALL ON SCHEMA vpn_bot FROM PUBLIC;
 SET search_path TO vpn_bot;
 
 CREATE TABLE IF NOT EXISTS chats (

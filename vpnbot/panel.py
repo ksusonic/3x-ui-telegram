@@ -77,44 +77,18 @@ class Panel:
             verify=ssl.create_default_context(cafile=config.ca_file or None),
             timeout=20,
             follow_redirects=False,
+            trust_env=False,
             transport=transport,
-            headers={"Authorization": f"Bearer {config.panel_token}"} if config.panel_token else {},
+            headers={"Authorization": f"Bearer {config.panel_token}"},
         )
-        self._auth_lock = asyncio.Lock()
         self._edit_lock = asyncio.Lock()
-        self._logged_in = False
 
     async def close(self):
         await self.http.aclose()
 
-    async def _login(self):
-        try:
-            response = await self.http.post(
-                "login",
-                json={
-                    "username": self.config.panel_username,
-                    "password": self.config.panel_password,
-                },
-            )
-            response.raise_for_status()
-            if response.json().get("success") is not True:
-                raise PanelError("Не удалось авторизоваться в панели")
-        except (httpx.HTTPError, ValueError, AttributeError):
-            raise PanelError("Не удалось авторизоваться в панели") from None
-        self._logged_in = True
-
     async def request(self, method: str, path: str, **kwargs):
         try:
-            if not self.config.panel_token and not self._logged_in:
-                async with self._auth_lock:
-                    if not self._logged_in:
-                        await self._login()
             response = await self.http.request(method, path, **kwargs)
-            # Retrying is safe only on an explicit auth rejection, never a write timeout.
-            if response.status_code in {401, 403, 307, 302} and not self.config.panel_token:
-                async with self._auth_lock:
-                    await self._login()
-                response = await self.http.request(method, path, **kwargs)
             response.raise_for_status()
             data = response.json()
             if not isinstance(data, dict) or data.get("success") is not True:

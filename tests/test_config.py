@@ -1,7 +1,3 @@
-import runpy
-import sqlite3
-from pathlib import Path
-
 import pytest
 
 from vpnbot.config import Config
@@ -37,6 +33,27 @@ def test_config_hides_secrets_in_repr_and_allows_panel_only(monkeypatch):
         Config.from_env()
 
 
+def test_panel_credentials_cannot_replace_api_token(monkeypatch):
+    monkeypatch.setenv("PANEL_BASE_URL", "https://panel.example/private")
+    monkeypatch.delenv("PANEL_API_TOKEN", raising=False)
+    monkeypatch.setenv("PANEL_USERNAME", "old-admin")
+    monkeypatch.setenv("PANEL_PASSWORD", "old-password")
+    with pytest.raises(ValueError, match="PANEL_API_TOKEN"):
+        Config.from_env(panel_only=True)
+
+
+def test_proxy_environment_is_disabled(monkeypatch):
+    from vpnbot.network import disable_proxies
+
+    keys = ("HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "http_proxy", "https_proxy", "all_proxy")
+    for key in keys:
+        monkeypatch.setenv(key, "http://127.0.0.1:9999")
+    disable_proxies()
+    import os
+
+    assert all(key not in os.environ for key in keys)
+
+
 def test_tunnel_fields_and_reverse_survive_update(client):
     reverse = {"tag": "reverse", "domains": ["example.com"]}
     client.update(
@@ -59,27 +76,3 @@ def test_tunnel_fields_and_reverse_survive_update(client):
     assert result["forwardedPorts"] == "80,443"
     assert result["created_at"] == client["createdAt"]
     assert "createdAt" not in result
-
-
-def test_backup_includes_committed_wal_and_has_private_permissions(tmp_path):
-    backup = runpy.run_path(str(Path(__file__).parents[1] / "deploy" / "backup.py"))["backup"]
-    source, target = tmp_path / "source.sqlite3", tmp_path / "backup.sqlite3"
-    live = sqlite3.connect(source)
-    live.execute("PRAGMA journal_mode=WAL")
-    live.execute("CREATE TABLE jobs (body TEXT)")
-    live.execute("INSERT INTO jobs VALUES ('notification')")
-    live.commit()
-    backup(source, target)
-    restored = sqlite3.connect(target)
-    assert restored.execute("SELECT body FROM jobs").fetchone()[0] == "notification"
-    assert target.stat().st_mode & 0o777 == 0o600
-    restored.close()
-    live.close()
-
-
-def test_backup_never_creates_missing_source(tmp_path):
-    backup = runpy.run_path(str(Path(__file__).parents[1] / "deploy" / "backup.py"))["backup"]
-    source, target = tmp_path / "missing.sqlite3", tmp_path / "backup.sqlite3"
-    with pytest.raises(ValueError):
-        backup(source, target)
-    assert not source.exists() and not target.exists()

@@ -1,9 +1,7 @@
 import json
 import math
 import secrets
-import sqlite3
 import time
-from pathlib import Path
 
 
 class ActionExpired(Exception):
@@ -11,42 +9,8 @@ class ActionExpired(Exception):
 
 
 class Store:
-    def __init__(self, path: Path | str):
-        self.db = sqlite3.connect(path)
-        self.db.row_factory = sqlite3.Row
-        self.db.execute("PRAGMA journal_mode=WAL")
-        self.db.execute("PRAGMA foreign_keys=ON")
-        self.db.executescript("""
-            CREATE TABLE IF NOT EXISTS chats (
-                user_id INTEGER PRIMARY KEY, chat_id INTEGER NOT NULL,
-                reachable INTEGER NOT NULL DEFAULT 1
-            );
-            CREATE TABLE IF NOT EXISTS actions (
-                token TEXT PRIMARY KEY, actor INTEGER NOT NULL, kind TEXT NOT NULL,
-                payload TEXT NOT NULL, expires REAL NOT NULL, consumed INTEGER DEFAULT 0
-            );
-            CREATE TABLE IF NOT EXISTS jobs (
-                id INTEGER PRIMARY KEY, actor INTEGER NOT NULL, body TEXT NOT NULL,
-                created REAL NOT NULL, finished INTEGER DEFAULT 0, reported INTEGER DEFAULT 0
-            );
-            CREATE TABLE IF NOT EXISTS deliveries (
-                job_id INTEGER NOT NULL REFERENCES jobs(id) ON DELETE CASCADE,
-                user_id INTEGER NOT NULL, state TEXT NOT NULL DEFAULT 'pending',
-                ready_at REAL NOT NULL DEFAULT 0,
-                PRIMARY KEY(job_id,user_id)
-            );
-            CREATE TABLE IF NOT EXISTS audit (
-                id INTEGER PRIMARY KEY, at REAL NOT NULL, actor INTEGER NOT NULL,
-                operation TEXT NOT NULL, detail TEXT NOT NULL
-            );
-            CREATE TABLE IF NOT EXISTS cooldown (
-                id INTEGER PRIMARY KEY CHECK(id=1), until_at REAL NOT NULL
-            );
-            CREATE TABLE IF NOT EXISTS updates (
-                update_id INTEGER PRIMARY KEY, processed_at REAL NOT NULL
-            );
-        """)
-        self.db.commit()
+    def __init__(self, connection):
+        self.db = connection
 
     def close(self):
         self.db.close()

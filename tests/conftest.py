@@ -1,10 +1,8 @@
 import os
-from pathlib import Path
 
 import pytest
 
 from vpnbot.config import Config
-from vpnbot.store import Store
 
 
 @pytest.fixture
@@ -15,7 +13,6 @@ def config():
         token="123456:ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi",
         panel_token="secret-panel-token",
         subscription_url="https://vpn.example/sub/",
-        database=Path(":memory:"),
     )
 
 
@@ -52,21 +49,18 @@ def client():
     }
 
 
-@pytest.fixture(params=["sqlite", "postgres"])
-def store(request):
-    if request.param == "postgres":
-        url = os.environ.get("TEST_DATABASE_URL")
-        if not url:
-            pytest.skip("Set TEST_DATABASE_URL to a disposable PostgreSQL database")
-        from vpnbot.postgres import PostgresStore
+@pytest.fixture
+def store():
+    url = os.environ.get("TEST_DATABASE_URL")
+    if not url:
+        pytest.skip("Set TEST_DATABASE_URL to a disposable PostgreSQL database")
+    from vpnbot.postgres import PostgresStore
 
-        db = PostgresStore(url, require_tls=False)
-        assert db.try_lock(), "Test database is in use"
-        db.initialize()
-        db.db.execute(
-            "TRUNCATE chats,actions,jobs,deliveries,audit,cooldown,updates RESTART IDENTITY CASCADE"
-        )
-    else:
-        db = Store(":memory:")
+    db = PostgresStore(url, require_tls=False)
+    assert db.try_lock(), "Test database is in use"
+    db.initialize()
+    db.db.execute(
+        "TRUNCATE chats,actions,jobs,deliveries,audit,cooldown,updates RESTART IDENTITY CASCADE"
+    )
     yield db
     db.close()

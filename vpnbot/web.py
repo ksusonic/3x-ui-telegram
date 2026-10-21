@@ -8,7 +8,9 @@ from aiogram.types import Update
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
-from vercel.queue import DuplicateIdempotencyKeyError, QueueError, send
+from vercel.queue import DuplicateIdempotencyKeyError, QueueError
+
+from .network import publish as send
 
 TOPIC = "vpn-bot-work"
 MAX_BODY = 256 * 1024
@@ -20,6 +22,39 @@ app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
 async def health():
     # Liveness only; never probes the panel or reveals secrets/configuration.
     return {"ok": True}
+
+
+@app.post("/api/ready")
+async def ready(request: Request):
+    secret = os.environ.get("TELEGRAM_WEBHOOK_SECRET", "")
+    supplied = request.headers.get("X-Telegram-Bot-Api-Secret-Token", "")
+    if len(secret) < 32 or not hmac.compare_digest(secret.encode(), supplied.encode()):
+        return JSONResponse({"ok": False}, status_code=403)
+    if os.environ.get("VERCEL_ENV") == "preview":
+        return JSONResponse({"ok": False}, status_code=503)
+    from .cloud_config import CloudConfig
+    from .panel import Panel
+    from .postgres import PostgresStore
+
+    store = None
+    panel = None
+    try:
+        config = CloudConfig.from_env()
+        store = PostgresStore(config.database_url)
+        if not store.try_lock():
+            return JSONResponse({"ok": False}, status_code=503)
+        store.initialize()
+        panel = Panel(config.bot)
+        await panel.clients()
+        return {"ok": True}
+    except Exception as exc:
+        log.warning("Readiness check failed: %s", type(exc).__name__)
+        return JSONResponse({"ok": False}, status_code=503)
+    finally:
+        if panel is not None:
+            await panel.close()
+        if store is not None:
+            store.close()
 
 
 @app.post("/api/telegram")

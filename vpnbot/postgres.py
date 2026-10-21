@@ -1,6 +1,7 @@
 """PostgreSQL storage; use a direct connection or a session pooler, not transaction pooling."""
 
 import contextlib
+import socket
 from pathlib import Path
 
 import psycopg
@@ -87,8 +88,20 @@ class PostgresStore(Store):
                 raise ValueError("DATABASE_URL must enable TLS")
             options.setdefault("sslmode", "require")
         options.setdefault("connect_timeout", 10)
+        host = options.get("host", "")
+        if host and not host.startswith("/") and "hostaddr" not in options:
+            # Supabase session poolers support IPv4; avoid unreliable IPv6 paths.
+            addresses = socket.getaddrinfo(
+                host,
+                int(options.get("port", 5432)),
+                socket.AF_INET,
+                socket.SOCK_STREAM,
+            )
+            options["hostaddr"] = addresses[0][4][0]
         self.raw = psycopg.connect(**options, autocommit=True, prepare_threshold=None)
         self.raw.execute("SET statement_timeout = '10s'")
+        self.raw.execute("SET idle_in_transaction_session_timeout = '30s'")
+        self.raw.execute("SET idle_session_timeout = '320s'")
         self.db = Connection(self.raw)
         self.locked = False
 
@@ -101,6 +114,14 @@ class PostgresStore(Store):
     def initialize(self):
         if not self.locked:
             raise RuntimeError("Storage lock required")
+        self.raw.execute("SET search_path TO vpn_bot")
+        secured = self.raw.execute(
+            "SELECT c.relname FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace "
+            "WHERE n.nspname='vpn_bot' AND c.relkind='r' AND c.relrowsecurity",
+        ).fetchall()
+        required = {"chats", "actions", "jobs", "deliveries", "audit", "cooldown", "updates"}
+        if required <= {row[0] for row in secured}:
+            return
         schema = Path(__file__).with_name("schema.sql").read_text()
         with self.raw.transaction():
             for statement in schema.split(";"):

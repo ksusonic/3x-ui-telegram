@@ -1,6 +1,5 @@
 import copy
 import json
-from dataclasses import replace
 
 import httpx
 import pytest
@@ -78,26 +77,6 @@ async def test_write_timeout_is_not_retried_or_exposed(config, client):
         await panel.bind("alice", 300, fingerprint(client))
     assert len(writes) == 1
     assert "secret" not in str(error.value)
-    await panel.close()
-
-
-async def test_session_reauthentication(config, client):
-    config = replace(config, panel_token="", panel_username="user", panel_password="pass")
-    calls = []
-
-    def handle(request):
-        calls.append(request.url.path)
-        if request.url.path.endswith("/login"):
-            assert json.loads(request.content) == {"username": "user", "password": "pass"}
-            return httpx.Response(200, json={"success": True}, headers={"set-cookie": "session=ok"})
-        if len(calls) == 2:
-            return httpx.Response(401)
-        assert "session=ok" in request.headers["cookie"]
-        return httpx.Response(200, json={"success": True, "obj": [client]})
-
-    panel = Panel(config, httpx.MockTransport(handle))
-    assert await panel.owned(200) == [client]
-    assert calls == ["/private/login", "/private/panel/api/clients/list"] * 2
     await panel.close()
 
 

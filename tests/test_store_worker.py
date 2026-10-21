@@ -4,7 +4,8 @@ import pytest
 from aiogram.exceptions import TelegramForbiddenError, TelegramNetworkError, TelegramRetryAfter
 from aiogram.methods import SendMessage
 
-from vpnbot.store import ActionExpired, Store
+from vpnbot.postgres import PostgresStore
+from vpnbot.store import ActionExpired
 from vpnbot.worker import deliver_one, report_finished
 
 
@@ -35,13 +36,14 @@ def test_duplicate_confirmation_cannot_create_second_job(store):
     assert store.db.execute("SELECT count(*) FROM jobs").fetchone()[0] == 1
 
 
-def test_restart_marks_inflight_unknown_and_keeps_pending(tmp_path):
-    path = tmp_path / "bot.sqlite3"
-    db = Store(path)
-    job = queue(db, (200, 201))
-    db.delivery(job, 200, "sending")
-    db.close()
-    reopened = Store(path)
+def test_restart_marks_inflight_unknown_and_keeps_pending(store):
+    dsn = store.raw.info.dsn
+    job = queue(store, (200, 201))
+    store.delivery(job, 200, "sending")
+    store.close()
+    reopened = PostgresStore(dsn, require_tls=False)
+    assert reopened.try_lock()
+    reopened.initialize()
     reopened.recover()
     assert reopened.counts(job) == {"unknown": 1, "pending": 1}
     assert reopened.next_delivery()["user_id"] == 201

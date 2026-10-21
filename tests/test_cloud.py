@@ -124,6 +124,14 @@ async def test_health_has_no_sensitive_metadata(web):
     publish.assert_not_called()
 
 
+async def test_readiness_requires_secret(web):
+    client, publish = web
+    response = await client.post("/api/ready")
+    assert response.status_code == 403
+    assert response.json() == {"ok": False}
+    publish.assert_not_called()
+
+
 async def test_update_replay_does_not_dispatch_twice(config, store, monkeypatch):
     dispatcher = SimpleNamespace(include_router=Mock(), feed_update=AsyncMock())
     monkeypatch.setattr("vpnbot.cloud.Dispatcher", lambda: dispatcher)
@@ -171,8 +179,6 @@ async def test_publish_failure_preserves_sent_delivery_for_retry(config, store, 
 
 
 def test_postgres_session_lock_prevents_overlapping_deployments(store):
-    if not isinstance(store, PostgresStore):
-        pytest.skip("PostgreSQL-specific")
     second = PostgresStore(store.raw.info.dsn, require_tls=False)
     try:
         assert not second.try_lock()
@@ -182,7 +188,7 @@ def test_postgres_session_lock_prevents_overlapping_deployments(store):
         second.close()
 
 
-def test_postgres_and_sqlite_atomic_rollback(store):
+def test_postgres_atomic_rollback(store):
     with pytest.raises(RuntimeError), store.db:
         store.db.execute("INSERT INTO chats VALUES (987654321,987654321,1)")
         raise RuntimeError("rollback")

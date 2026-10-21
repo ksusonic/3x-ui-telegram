@@ -1,4 +1,3 @@
-import asyncio
 import logging
 
 from aiogram import Bot
@@ -76,18 +75,3 @@ async def report_finished(bot: Bot, store: Store, config: Config):
             # Reports are available via /jobs; don't repeatedly send an uncertain summary.
             log.warning("Job report failed: job=%s", job["id"])
         store.reported(job["id"])
-
-
-async def run_worker(bot: Bot, panel: Panel, store: Store, config: Config):
-    while True:
-        try:
-            worked = await deliver_one(bot, panel, store)
-            await report_finished(bot, store, config)
-            await asyncio.sleep(1.1 if worked else 2)
-        except asyncio.CancelledError:
-            raise
-        except Exception as exc:
-            log.error("Queue worker failed: %s", type(exc).__name__)
-            # Don't retry any delivery whose send may already have reached Telegram.
-            store.recover()
-            await asyncio.sleep(5)
