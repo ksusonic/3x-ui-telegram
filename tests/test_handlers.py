@@ -6,7 +6,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.client.session.base import BaseSession
 from aiogram.enums import ParseMode
-from aiogram.methods import AnswerCallbackQuery, SendMessage
+from aiogram.methods import AnswerCallbackQuery, GetMe, SendMessage
 from aiogram.types import CallbackQuery, Chat, Message, MessageEntity, Update, User
 
 from vpnbot.handlers import create_router, status_text
@@ -23,6 +23,8 @@ class RecordingSession(BaseSession):
 
     async def make_request(self, bot, method, timeout=None):  # noqa: ASYNC109
         self.calls.append(method)
+        if isinstance(method, GetMe):
+            return User(id=bot.id, is_bot=True, first_name="VPN", username="vpn_test_bot")
         if isinstance(method, AnswerCallbackQuery):
             return True
         return Message(
@@ -181,13 +183,40 @@ async def test_linked_user_ordinary_messages_are_silent(harness, text):
 
 @pytest.mark.parametrize("command", ["/start", "/help"])
 @pytest.mark.parametrize("chat_type", ["private", "group", "supergroup"])
-async def test_help_requires_explicit_command(harness, config, command, chat_type):
+async def test_help_commands_only_reply_in_private_chat(harness, config, command, chat_type):
     send, panel, store = harness
     object.__setattr__(config, "admin_chat_ids", frozenset({-100}))
-    replies = messages(await send(100, command, chat_type=chat_type))
+    calls = await send(100, command, chat_type=chat_type)
+    if chat_type == "private":
+        replies = messages(calls)
+        assert len(replies) == 1
+        assert "Команды администратора" in replies[0].text
+        assert replies[0].reply_markup is not None
+    else:
+        assert not calls
+
+
+@pytest.mark.parametrize("command", ["/start@vpn_test_bot", "/help@vpn_test_bot"])
+async def test_addressed_help_commands_are_silent_in_group(harness, config, command):
+    send, panel, store = harness
+    object.__setattr__(config, "admin_chat_ids", frozenset({-100}))
+    assert not messages(await send(100, command, chat_type="supergroup"))
+
+
+async def test_addressed_admin_command_still_works_in_group(harness, config):
+    send, panel, store = harness
+    object.__setattr__(config, "admin_chat_ids", frozenset({-100}))
+    replies = messages(await send(100, "/users@vpn_test_bot", chat_type="supergroup"))
     assert len(replies) == 1
-    assert "Команды администратора" in replies[0].text
-    assert (replies[0].reply_markup is not None) == (chat_type == "private")
+    assert "alice" in replies[0].text
+
+
+async def test_expired_group_button_does_not_recommend_private_start(harness, config):
+    send, panel, store = harness
+    object.__setattr__(config, "admin_chat_ids", frozenset({-100}))
+    replies = messages(await send(100, callback="old:button", chat_type="supergroup"))
+    assert replies[0].text == "Кнопка устарела. Повторите команду"
+    assert replies[0].reply_markup is None
 
 
 async def test_allowed_group_admin_commands_do_not_register_private_chat(harness, config):

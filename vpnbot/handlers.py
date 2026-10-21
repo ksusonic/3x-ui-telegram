@@ -164,11 +164,10 @@ def create_router(config: Config, panel: Panel, store: Store) -> Router:
         for client in clients:
             await message.answer(status_text(client))
 
-    @router.message(CommandStart())
-    @router.message(Command("help"))
+    @router.message(F.chat.type == "private", CommandStart())
+    @router.message(F.chat.type == "private", Command("help"))
     async def start(message: Message, is_admin: bool):
-        private = message.chat.type == "private"
-        text = "Личный кабинет VPN. Выберите действие." if private else "Управление VPN в группе."
+        text = "Личный кабинет VPN. Выберите действие."
         if is_admin:
             text += (
                 "\n\nКоманды администратора:\n"
@@ -180,7 +179,7 @@ def create_router(config: Config, panel: Panel, store: Store) -> Router:
                 "/jobs — последние рассылки\n"
                 "/id — мой Telegram ID"
             )
-        await message.answer(text, reply_markup=menu() if private else None)
+        await message.answer(text, reply_markup=menu())
 
     @router.message(Command("id"))
     async def own_id(message: Message):
@@ -468,6 +467,11 @@ def create_router(config: Config, panel: Panel, store: Store) -> Router:
 
     @router.callback_query()
     async def unknown_callback(query: CallbackQuery):
-        await query.message.answer("Кнопка устарела. Откройте /start")
+        text = (
+            "Кнопка устарела. Откройте /start"
+            if query.message.chat.type == "private"
+            else "Кнопка устарела. Повторите команду"
+        )
+        await query.message.answer(text)
 
     return router
