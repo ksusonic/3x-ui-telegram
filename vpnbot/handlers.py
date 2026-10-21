@@ -78,10 +78,9 @@ class Guard(BaseMiddleware):
     async def __call__(self, handler, event: Message | CallbackQuery, data):
         message = event if isinstance(event, Message) else event.message
         if not isinstance(message, Message) or message.chat.type != "private":
-            if isinstance(event, CallbackQuery):
-                await event.answer("Бот доступен только в личном чате", show_alert=True)
             return
         user_id = event.from_user.id
+        authorized = user_id in self.config.admin_ids
         if (
             isinstance(event, Message)
             and event.text
@@ -93,21 +92,16 @@ class Guard(BaseMiddleware):
             is_admin = user_id in self.config.admin_ids
             clients = [] if is_admin else await self.panel.owned(user_id)
             if not is_admin and not clients:
-                text = (
-                    f"Доступ закрыт. Ваш Telegram ID: <code>{user_id}</code>. "
-                    "Обратитесь к администратору."
-                )
-                if isinstance(event, CallbackQuery):
-                    await event.answer("Доступ закрыт", show_alert=True)
-                else:
-                    await event.answer(text)
                 return
+            authorized = True
             # Acknowledge callbacks before slower API operations to avoid query expiry.
             if isinstance(event, CallbackQuery):
                 await event.answer()
             data.update(clients=clients, is_admin=is_admin)
             return await handler(event, data)
         except (PanelError, ActionExpired, ValueError) as exc:
+            if not authorized:
+                return
             # ValueError messages are not echoed: a parser may include sensitive input.
             text = (
                 str(exc)
@@ -120,7 +114,8 @@ class Guard(BaseMiddleware):
         except Exception as exc:
             # Never dump updates/tracebacks containing keys or tokens to logs.
             log.error("Handler failed: %s", type(exc).__name__)
-            await message.answer("Не удалось выполнить запрос. Сообщите администратору")
+            if authorized:
+                await message.answer("Не удалось выполнить запрос. Сообщите администратору")
 
 
 def create_router(config: Config, panel: Panel, store: Store) -> Router:

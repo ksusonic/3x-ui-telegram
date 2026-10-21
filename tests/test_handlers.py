@@ -143,12 +143,11 @@ def button(call, prefix):
     )
 
 
-async def test_closed_access_has_id_but_no_registration_request(harness):
+async def test_unlinked_users_receive_no_replies(harness):
     send, panel, store = harness
-    replies = messages(await send(999, "/start"))
-    assert "Доступ закрыт" in replies[0].text
-    assert "999" in replies[0].text
-    assert replies[0].reply_markup is None
+    for command in ("/start", "/help", "/id", "/connections", "hello"):
+        assert not await send(999, command)
+    assert not await send(999, callback="menu:connections")
     assert panel.rows[0]["tgId"] == 200
     # Starting is only a contact record, never an authorization grant.
     assert store.reachable(999)
@@ -203,9 +202,7 @@ async def test_key_callback_is_bound_to_user_and_rechecks_revocation(harness):
     panel.rows[0]["tgId"] = 0
     replies = await send(200, callback=callback)
     assert not panel.link_calls
-    assert any(
-        isinstance(call, AnswerCallbackQuery) and "Доступ закрыт" in call.text for call in replies
-    )
+    assert not replies
 
 
 async def test_authorized_key_includes_qr(harness):
@@ -236,8 +233,7 @@ async def test_panel_outage_fails_closed_for_existing_buttons(harness):
     send, panel, store = harness
     response = messages(await send(200, "/connections"))[0]
     panel.unavailable = True
-    replies = messages(await send(200, callback=button(response, "key")))
-    assert "недоступна" in replies[0].text
+    assert not await send(200, callback=button(response, "key"))
     assert not panel.link_calls
 
 
