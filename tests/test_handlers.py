@@ -165,13 +165,13 @@ async def test_group_commands_do_nothing_even_for_admin(harness):
 
 async def test_allowed_group_admin_commands_do_not_register_private_chat(harness, config):
     send, panel, store = harness
-    object.__setattr__(config, "admin_chat_ids", frozenset({-2387748729}))
-    replies = messages(await send(100, "/users", chat_type="group", chat_id=-2387748729))
+    object.__setattr__(config, "admin_chat_ids", frozenset({-987654321}))
+    replies = messages(await send(100, "/users", chat_type="group", chat_id=-987654321))
     assert "alice" in replies[0].text
-    assert replies[0].chat_id == -2387748729
+    assert replies[0].chat_id == -987654321
     assert store.contact(100) is None
     store.register(100, 100)
-    await send(100, "/help", chat_type="group", chat_id=-2387748729)
+    await send(100, "/help", chat_type="group", chat_id=-987654321)
     assert store.contact(100)["chat_id"] == 100
 
 

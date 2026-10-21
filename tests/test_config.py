@@ -4,7 +4,7 @@ from vpnbot.config import Config
 from vpnbot.panel import update_payload
 
 
-@pytest.mark.parametrize("value", ["0", "123", "-2387748729,123"])
+@pytest.mark.parametrize("value", ["0", "123", "-987654321,123"])
 def test_admin_group_ids_must_be_negative(monkeypatch, value):
     monkeypatch.setenv("ADMIN_CHAT_IDS", value)
     with pytest.raises(ValueError, match="ADMIN_CHAT_IDS"):
