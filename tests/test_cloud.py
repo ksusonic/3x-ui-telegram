@@ -178,12 +178,28 @@ async def test_publish_failure_preserves_sent_delivery_for_retry(config, store, 
     bot.send_message.assert_awaited_once_with(200, "hello", parse_mode=None)
 
 
-def test_postgres_session_lock_prevents_overlapping_deployments(store):
+def test_processing_lease_prevents_overlapping_deployments(store):
     second = PostgresStore(store.raw.info.dsn, require_tls=False)
     try:
         assert not second.try_lock()
         store.close()
         assert second.try_lock()
+    finally:
+        second.close()
+
+
+def test_expired_lease_can_be_reclaimed_and_old_owner_cannot_release_it(store):
+    second = PostgresStore(store.raw.info.dsn, require_tls=False)
+    try:
+        assert not second.try_lock()
+        store.raw.execute(
+            "UPDATE vpn_bot.work_lock SET expires_at=clock_timestamp()-interval '1 second'"
+        )
+        assert second.try_lock()
+        store.close()
+        assert (
+            second.raw.execute("SELECT owner FROM vpn_bot.work_lock").fetchone()[0] == second.owner
+        )
     finally:
         second.close()
 

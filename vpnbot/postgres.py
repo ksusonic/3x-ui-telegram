@@ -1,6 +1,7 @@
-"""PostgreSQL storage; use a direct connection or a session pooler, not transaction pooling."""
+"""PostgreSQL storage with a bounded cross-deployment processing lease."""
 
 import contextlib
+import secrets
 import socket
 from pathlib import Path
 
@@ -9,8 +10,8 @@ from psycopg.conninfo import conninfo_to_dict
 
 from .store import Store
 
-# Serialize Telegram updates and delivery work across all functions/deployments.
-LOCK_ID = 818228639991
+# Vercel functions stop after 300 seconds; leave a margin before another owner can start.
+LEASE_SECONDS = 330
 
 
 class Row(tuple):
@@ -104,11 +105,27 @@ class PostgresStore(Store):
         self.raw.execute("SET idle_session_timeout = '320s'")
         self.db = Connection(self.raw)
         self.locked = False
+        self.owner = secrets.token_urlsafe(24)
 
     def try_lock(self) -> bool:
         if self.locked:
             return True
-        self.locked = self.raw.execute("SELECT pg_try_advisory_lock(%s)", (LOCK_ID,)).fetchone()[0]
+        if self.raw.execute("SELECT to_regclass('vpn_bot.work_lock')").fetchone()[0] is None:
+            self.raw.execute("CREATE SCHEMA IF NOT EXISTS vpn_bot")
+            self.raw.execute(
+                "CREATE TABLE IF NOT EXISTS vpn_bot.work_lock ("
+                "id BIGINT PRIMARY KEY CHECK(id=1),owner TEXT NOT NULL,"
+                "expires_at TIMESTAMPTZ NOT NULL)",
+            )
+            self.raw.execute("ALTER TABLE vpn_bot.work_lock ENABLE ROW LEVEL SECURITY")
+        row = self.raw.execute(
+            "INSERT INTO vpn_bot.work_lock AS l VALUES "
+            "(1,%s,clock_timestamp() + make_interval(secs => %s)) "
+            "ON CONFLICT(id) DO UPDATE SET owner=excluded.owner,expires_at=excluded.expires_at "
+            "WHERE l.expires_at<=clock_timestamp() RETURNING owner",
+            (self.owner, LEASE_SECONDS),
+        ).fetchone()
+        self.locked = bool(row and row[0] == self.owner)
         return self.locked
 
     def initialize(self):
@@ -119,7 +136,16 @@ class PostgresStore(Store):
             "SELECT c.relname FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace "
             "WHERE n.nspname='vpn_bot' AND c.relkind='r' AND c.relrowsecurity",
         ).fetchall()
-        required = {"chats", "actions", "jobs", "deliveries", "audit", "cooldown", "updates"}
+        required = {
+            "chats",
+            "actions",
+            "jobs",
+            "deliveries",
+            "audit",
+            "cooldown",
+            "updates",
+            "work_lock",
+        }
         if required <= {row[0] for row in secured}:
             return
         schema = Path(__file__).with_name("schema.sql").read_text()
@@ -132,6 +158,8 @@ class PostgresStore(Store):
         try:
             if self.locked and not self.raw.closed:
                 with contextlib.suppress(psycopg.Error):
-                    self.raw.execute("SELECT pg_advisory_unlock(%s)", (LOCK_ID,))
+                    self.raw.execute(
+                        "DELETE FROM vpn_bot.work_lock WHERE id=1 AND owner=%s", (self.owner,)
+                    )
         finally:
             self.raw.close()

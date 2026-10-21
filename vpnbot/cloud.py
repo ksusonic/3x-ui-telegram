@@ -22,7 +22,7 @@ for name in ("aiogram", "httpx", "httpcore", "httpx2", "httpcore2"):
 
 
 async def process(payload: dict, config: CloudConfig, store, panel, bot, publish):
-    """Called only while holding the cross-deployment database session lock."""
+    """Called only while holding the cross-deployment processing lease."""
     store.recover()
     update_id = None
     if payload.get("type") == "update":
