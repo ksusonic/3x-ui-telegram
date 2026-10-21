@@ -157,6 +157,37 @@ async def test_group_commands_do_nothing_even_for_admin(harness):
     send, panel, store = harness
     assert not await send(100, "/link 300 alice", chat_type="group")
     assert not panel.bind_calls
+    assert store.contact(100) is None
+
+
+@pytest.mark.parametrize("interaction", [{"text": "/help"}, {"callback": "menu:connections"}])
+async def test_private_interactions_register_contact_and_clear_block(harness, interaction):
+    send, panel, store = harness
+    await send(200, **interaction)
+    assert store.reachable(200)
+    store.blocked(200)
+    assert not store.reachable(200)
+    await send(200, **interaction)
+    assert store.reachable(200)
+
+
+async def test_users_distinguishes_binding_contact_and_delivery_failure(harness):
+    send, panel, store = harness
+    panel.rows = [
+        {"email": "unlinked", "tgId": 0},
+        {"email": "unknown", "tgId": 201},
+        {"email": "registered", "tgId": 202},
+        {"email": "blocked", "tgId": 203},
+    ]
+    store.register(202, 202)
+    store.register(203, 203)
+    store.blocked(203)
+    reply = messages(await send(100, "/users"))[0].text
+    assert "unlinked: TG — · Telegram не привязан" in reply
+    assert "unknown: TG 201 · чат с ботом ещё не зарегистрирован" in reply
+    assert "registered: TG 202 · чат зарегистрирован" in reply
+    assert "blocked: TG 203 · Telegram запретил отправку сообщений" in reply
+    assert "не запускал / недоступен" not in reply
 
 
 async def test_nonadmin_cannot_bind_or_broadcast(harness):

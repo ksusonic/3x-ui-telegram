@@ -81,13 +81,9 @@ class Guard(BaseMiddleware):
             return
         user_id = event.from_user.id
         authorized = user_id in self.config.admin_ids
-        if (
-            isinstance(event, Message)
-            and event.text
-            and event.text.strip()
-            and event.text.split()[0].split("@")[0] == "/start"
-        ):
-            self.store.register(user_id, message.chat.id)
+        # Any incoming private interaction proves the user has opened this bot.
+        # Recording a contact never grants access to VPN clients.
+        self.store.register(user_id, message.chat.id)
         try:
             is_admin = user_id in self.config.admin_ids
             clients = [] if is_admin else await self.panel.owned(user_id)
@@ -364,10 +360,16 @@ def create_router(config: Config, panel: Panel, store: Store) -> Router:
         lines = []
         for client in clients:
             user_id = telegram_id(client)
-            contact = (
-                "доступен для сообщений" if store.reachable(user_id) else "не запускал / недоступен"
-            )
-            lines.append(f"{esc(client['email'])}: TG {user_id or '—'} · {contact}")
+            contact = store.contact(user_id) if user_id else None
+            if not user_id:
+                status = "Telegram не привязан"
+            elif contact is None:
+                status = "чат с ботом ещё не зарегистрирован"
+            elif not contact["reachable"]:
+                status = "Telegram запретил отправку сообщений"
+            else:
+                status = "чат зарегистрирован"
+            lines.append(f"{esc(client['email'])}: TG {user_id or '—'} · {status}")
         for offset in range(0, len(lines), 12):
             await message.answer("\n".join(lines[offset : offset + 12]))
         if not lines:

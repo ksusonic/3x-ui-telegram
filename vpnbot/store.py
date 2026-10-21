@@ -39,6 +39,11 @@ class Store:
             (user_id,),
         ).fetchone()
 
+    def contact(self, user_id: int):
+        return self.db.execute(
+            "SELECT chat_id, reachable FROM chats WHERE user_id=?", (user_id,)
+        ).fetchone()
+
     def recipients(self, allowed: set[int]) -> list[int]:
         return [
             r[0]
