@@ -163,6 +163,33 @@ async def test_group_commands_do_nothing_even_for_admin(harness):
     assert store.contact(100) is None
 
 
+@pytest.mark.parametrize("text", ["hello", "спасибо", "/unknown", None])
+@pytest.mark.parametrize("chat_type", ["private", "group", "supergroup"])
+async def test_ordinary_messages_do_not_trigger_help(harness, config, text, chat_type):
+    send, panel, store = harness
+    object.__setattr__(config, "admin_chat_ids", frozenset({-100}))
+    assert not await send(100, text, chat_type=chat_type)
+    assert not panel.bind_calls
+    assert not panel.link_calls
+
+
+@pytest.mark.parametrize("text", ["hello", "спасибо", "/unknown", None])
+async def test_linked_user_ordinary_messages_are_silent(harness, text):
+    send, panel, store = harness
+    assert not await send(200, text)
+
+
+@pytest.mark.parametrize("command", ["/start", "/help"])
+@pytest.mark.parametrize("chat_type", ["private", "group", "supergroup"])
+async def test_help_requires_explicit_command(harness, config, command, chat_type):
+    send, panel, store = harness
+    object.__setattr__(config, "admin_chat_ids", frozenset({-100}))
+    replies = messages(await send(100, command, chat_type=chat_type))
+    assert len(replies) == 1
+    assert "Команды администратора" in replies[0].text
+    assert (replies[0].reply_markup is not None) == (chat_type == "private")
+
+
 async def test_allowed_group_admin_commands_do_not_register_private_chat(harness, config):
     send, panel, store = harness
     object.__setattr__(config, "admin_chat_ids", frozenset({-987654321}))
@@ -316,7 +343,7 @@ async def test_panel_outage_fails_closed_for_existing_buttons(harness):
 
 async def test_whitespace_message_is_safe(harness):
     send, panel, store = harness
-    assert messages(await send(200, "   "))
+    assert not await send(200, "   ")
 
 
 def test_status_omits_all_quotas_and_expiration(client):

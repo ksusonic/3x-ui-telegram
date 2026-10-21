@@ -466,10 +466,6 @@ def create_router(config: Config, panel: Panel, store: Store) -> Router:
         if not jobs:
             await message.answer("Рассылок пока нет")
 
-    @router.message()
-    async def unknown_message(message: Message):
-        await message.answer("Откройте /help для списка команд", reply_markup=menu())
-
     @router.callback_query()
     async def unknown_callback(query: CallbackQuery):
         await query.message.answer("Кнопка устарела. Откройте /start")
