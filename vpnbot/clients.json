@@ -1,0 +1,1180 @@
+{
+  "source": "https://docs.rw/clients",
+  "reviewed_at": "2026-10-21",
+  "entries": [
+    {
+      "entry_id": "anywhere-android",
+      "core": "other",
+      "sources": [
+        "https://docs.rw/clients#anywhere-android",
+        "https://github.com/NodePassProject/Anywhere"
+      ],
+      "name": "Anywhere",
+      "download_url": "https://play.google.com/store/apps/details?id=com.argsment.anywhere",
+      "app_id": "anywhere",
+      "platform": "android"
+    },
+    {
+      "entry_id": "clash-meta-android-android",
+      "core": "mihomo",
+      "sources": [
+        "https://docs.rw/clients#clash-meta-android-android",
+        "https://github.com/MetaCubeX/ClashMetaForAndroid",
+        "https://github.com/MetaCubeX/ClashMetaForAndroid"
+      ],
+      "name": "Clash Meta for Android",
+      "download_url": "https://github.com/MetaCubeX/ClashMetaForAndroid/releases/latest",
+      "app_id": "clash-meta-android",
+      "platform": "android"
+    },
+    {
+      "entry_id": "clash-mi-android",
+      "core": "mihomo",
+      "sources": [
+        "https://docs.rw/clients#clash-mi-android",
+        "https://github.com/KaringX/clashmi",
+        "https://github.com/KaringX/clashmi",
+        "https://clashmi.app"
+      ],
+      "name": "Clash Mi",
+      "download_url": "https://github.com/KaringX/clashmi/releases/latest",
+      "app_id": "clash-mi",
+      "platform": "android"
+    },
+    {
+      "entry_id": "flclash-android",
+      "core": "mihomo",
+      "sources": [
+        "https://docs.rw/clients#flclash-android",
+        "https://github.com/chen08209/FlClash",
+        "https://github.com/chen08209/FlClash"
+      ],
+      "name": "FlClash",
+      "download_url": "https://github.com/chen08209/FlClash/releases/latest",
+      "app_id": "flclash",
+      "platform": "android"
+    },
+    {
+      "entry_id": "flclashx-android",
+      "core": "mihomo",
+      "sources": [
+        "https://docs.rw/clients#flclashx-android",
+        "https://github.com/pluralplay/FlClashX",
+        "https://github.com/pluralplay/FlClashX"
+      ],
+      "name": "FlClashX",
+      "download_url": "https://github.com/pluralplay/FlClashX/releases/latest",
+      "app_id": "flclashx",
+      "platform": "android"
+    },
+    {
+      "entry_id": "happ-android",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#happ-android",
+        "https://happ.su/main"
+      ],
+      "name": "Happ",
+      "download_url": "https://play.google.com/store/apps/details?id=com.happproxy",
+      "app_id": "happ",
+      "platform": "android"
+    },
+    {
+      "entry_id": "hiddify-android",
+      "core": "singbox",
+      "sources": [
+        "https://docs.rw/clients#hiddify-android",
+        "https://github.com/hiddify/hiddify-app",
+        "https://github.com/hiddify/hiddify-app"
+      ],
+      "name": "Hiddify",
+      "download_url": "https://play.google.com/store/apps/details?id=app.hiddify.com",
+      "app_id": "hiddify",
+      "platform": "android"
+    },
+    {
+      "entry_id": "husi-android",
+      "core": "singbox",
+      "sources": [
+        "https://docs.rw/clients#husi-android",
+        "https://github.com/xchacha20-poly1305/husi",
+        "https://github.com/xchacha20-poly1305/husi"
+      ],
+      "name": "Husi",
+      "download_url": "https://github.com/xchacha20-poly1305/husi/releases/latest",
+      "app_id": "husi",
+      "platform": "android"
+    },
+    {
+      "entry_id": "incy-android",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#incy-android",
+        "https://incy.cc/"
+      ],
+      "name": "INCY",
+      "download_url": "https://play.google.com/store/apps/details?id=llc.itdev.incy",
+      "app_id": "incy",
+      "platform": "android"
+    },
+    {
+      "entry_id": "inhive-android",
+      "core": "singbox",
+      "sources": [
+        "https://docs.rw/clients#inhive-android",
+        "https://inhive.ru"
+      ],
+      "name": "InHive",
+      "download_url": "https://github.com/TwilgateLabs/inhive-android/releases/latest",
+      "app_id": "inhive",
+      "platform": "android"
+    },
+    {
+      "entry_id": "karing-android",
+      "core": "singbox",
+      "sources": [
+        "https://docs.rw/clients#karing-android",
+        "https://github.com/KaringX/karing",
+        "https://github.com/KaringX/karing",
+        "https://karing.app/"
+      ],
+      "name": "Karing",
+      "download_url": "https://github.com/KaringX/karing/releases/latest",
+      "app_id": "karing",
+      "platform": "android"
+    },
+    {
+      "entry_id": "nekobox-android",
+      "core": "singbox",
+      "sources": [
+        "https://docs.rw/clients#nekobox-android",
+        "https://github.com/MatsuriDayo/NekoBoxForAndroid",
+        "https://github.com/MatsuriDayo/NekoBoxForAndroid",
+        "https://matsuridayo.github.io/"
+      ],
+      "name": "NekoBox For Android",
+      "download_url": "https://github.com/MatsuriDayo/NekoBoxForAndroid/releases/latest",
+      "app_id": "nekobox",
+      "platform": "android"
+    },
+    {
+      "entry_id": "onexray-android",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#onexray-android",
+        "https://github.com/OneXray/OneXray",
+        "https://github.com/OneXray/OneXray"
+      ],
+      "name": "OneXray",
+      "download_url": "https://play.google.com/store/apps/details?id=net.yuandev.onexray",
+      "app_id": "onexray",
+      "platform": "android"
+    },
+    {
+      "entry_id": "simple-gui-client-android",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#simple-gui-client-android",
+        "https://github.com/SaeedDev94/Xray",
+        "https://github.com/SaeedDev94/Xray"
+      ],
+      "name": "Simple GUI Client",
+      "download_url": "https://github.com/SaeedDev94/Xray/releases",
+      "app_id": "simple-gui-client",
+      "platform": "android"
+    },
+    {
+      "entry_id": "simplexray-android",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#simplexray-android",
+        "https://github.com/lhear/SimpleXray",
+        "https://github.com/lhear/SimpleXray"
+      ],
+      "name": "SimpleXray",
+      "download_url": "https://github.com/lhear/SimpleXray/releases/latest",
+      "app_id": "simplexray",
+      "platform": "android"
+    },
+    {
+      "entry_id": "singbox-android",
+      "core": "singbox",
+      "sources": [
+        "https://docs.rw/clients#singbox-android",
+        "https://github.com/SagerNet/sing-box",
+        "https://github.com/SagerNet/sing-box",
+        "https://sing-box.sagernet.org/"
+      ],
+      "name": "Sing-box",
+      "download_url": "https://play.google.com/store/apps/details?id=io.nekohasekai.sfa",
+      "app_id": "singbox",
+      "platform": "android"
+    },
+    {
+      "entry_id": "v2box-android",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#v2box-android"
+      ],
+      "name": "V2Box",
+      "download_url": "https://play.google.com/store/apps/details?id=dev.hexasoftware.v2box",
+      "app_id": "v2box",
+      "platform": "android"
+    },
+    {
+      "entry_id": "v2rayng-android",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#v2rayng-android",
+        "https://github.com/2dust/v2rayNG",
+        "https://github.com/2dust/v2rayNG"
+      ],
+      "name": "V2rayNG",
+      "download_url": "https://github.com/2dust/v2rayNG/releases/latest",
+      "app_id": "v2rayng",
+      "platform": "android"
+    },
+    {
+      "entry_id": "v2raytun-android",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#v2raytun-android",
+        "https://v2raytun.com/"
+      ],
+      "name": "V2rayTun",
+      "download_url": "https://play.google.com/store/apps/details?id=com.v2raytun.android",
+      "app_id": "v2raytun",
+      "platform": "android"
+    },
+    {
+      "entry_id": "anywhere-ios",
+      "core": "other",
+      "sources": [
+        "https://docs.rw/clients#anywhere-ios",
+        "https://github.com/NodePassProject/Anywhere"
+      ],
+      "name": "Anywhere",
+      "download_url": "https://apps.apple.com/us/app/id6758235178",
+      "app_id": "anywhere",
+      "platform": "ios"
+    },
+    {
+      "entry_id": "clash-mi-ios",
+      "core": "mihomo",
+      "sources": [
+        "https://docs.rw/clients#clash-mi-ios",
+        "https://github.com/KaringX/clashmi",
+        "https://github.com/KaringX/clashmi",
+        "https://clashmi.app"
+      ],
+      "name": "Clash Mi",
+      "download_url": "https://apps.apple.com/us/app/clash-mi/id6744321968",
+      "app_id": "clash-mi",
+      "platform": "ios"
+    },
+    {
+      "entry_id": "happ-ios",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#happ-ios",
+        "https://happ.su/main"
+      ],
+      "name": "Happ",
+      "download_url": "https://apps.apple.com/us/app/happ-proxy-utility/id6504287215",
+      "app_id": "happ",
+      "platform": "ios"
+    },
+    {
+      "entry_id": "hiddify-ios",
+      "core": "singbox",
+      "sources": [
+        "https://docs.rw/clients#hiddify-ios",
+        "https://github.com/hiddify/hiddify-app",
+        "https://github.com/hiddify/hiddify-app"
+      ],
+      "name": "Hiddify",
+      "download_url": "https://apps.apple.com/us/app/hiddify-proxy-vpn/id6596777532",
+      "app_id": "hiddify",
+      "platform": "ios"
+    },
+    {
+      "entry_id": "incy-ios",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#incy-ios",
+        "https://incy.cc/"
+      ],
+      "name": "INCY",
+      "download_url": "https://apps.apple.com/us/app/incy/id6756943388",
+      "app_id": "incy",
+      "platform": "ios"
+    },
+    {
+      "entry_id": "karing-ios",
+      "core": "singbox",
+      "sources": [
+        "https://docs.rw/clients#karing-ios",
+        "https://github.com/KaringX/karing",
+        "https://github.com/KaringX/karing",
+        "https://karing.app/"
+      ],
+      "name": "Karing",
+      "download_url": "https://apps.apple.com/us/app/karing/id6472431552",
+      "app_id": "karing",
+      "platform": "ios"
+    },
+    {
+      "entry_id": "loon-ios",
+      "core": "other",
+      "sources": [
+        "https://docs.rw/clients#loon-ios",
+        "https://nsloon.app/"
+      ],
+      "name": "Loon",
+      "download_url": "https://apps.apple.com/in/app/loon/id1373567447",
+      "app_id": "loon",
+      "platform": "ios"
+    },
+    {
+      "entry_id": "onexray-ios",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#onexray-ios",
+        "https://github.com/OneXray/OneXray",
+        "https://github.com/OneXray/OneXray"
+      ],
+      "name": "OneXray",
+      "download_url": "https://apps.apple.com/app/onexray/id6503296188",
+      "app_id": "onexray",
+      "platform": "ios"
+    },
+    {
+      "entry_id": "rabbit-hole-ios",
+      "core": "mihomo",
+      "sources": [
+        "https://docs.rw/clients#rabbit-hole-ios",
+        "https://rabbit-hole-1.gitbook.io/rabbit-hole-docs/"
+      ],
+      "name": "Rabbit Hole",
+      "download_url": "https://apps.apple.com/app/rabbithole-vpn-client/id6683309629",
+      "app_id": "rabbit-hole",
+      "platform": "ios"
+    },
+    {
+      "entry_id": "shadowrocket-ios",
+      "core": "other",
+      "sources": [
+        "https://docs.rw/clients#shadowrocket-ios"
+      ],
+      "name": "ShadowRocket",
+      "download_url": "https://apps.apple.com/us/app/shadowrocket/id932747118",
+      "app_id": "shadowrocket",
+      "platform": "ios"
+    },
+    {
+      "entry_id": "singbox-ios",
+      "core": "singbox",
+      "sources": [
+        "https://docs.rw/clients#singbox-ios",
+        "https://github.com/SagerNet/sing-box",
+        "https://github.com/SagerNet/sing-box",
+        "https://sing-box.sagernet.org/"
+      ],
+      "name": "Sing-box",
+      "download_url": "https://apps.apple.com/us/app/sing-box-vt/id6673731168",
+      "app_id": "singbox",
+      "platform": "ios"
+    },
+    {
+      "entry_id": "stash-ios",
+      "core": "other",
+      "sources": [
+        "https://docs.rw/clients#stash-ios",
+        "https://stash.ws/"
+      ],
+      "name": "Stash",
+      "download_url": "https://apps.apple.com/app/stash/id1596063349?platform=iphone",
+      "app_id": "stash",
+      "platform": "ios"
+    },
+    {
+      "entry_id": "streisand-ios",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#streisand-ios"
+      ],
+      "name": "Streisand",
+      "download_url": "https://apps.apple.com/us/app/streisand/id6450534064",
+      "app_id": "streisand",
+      "platform": "ios"
+    },
+    {
+      "entry_id": "v2box-ios",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#v2box-ios"
+      ],
+      "name": "V2Box",
+      "download_url": "https://apps.apple.com/app/v2box-v2ray-client/id6446814690",
+      "app_id": "v2box",
+      "platform": "ios"
+    },
+    {
+      "entry_id": "v2raytun-ios",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#v2raytun-ios",
+        "https://v2raytun.com/"
+      ],
+      "name": "V2rayTun",
+      "download_url": "https://apps.apple.com/en/app/v2raytun/id6476628951",
+      "app_id": "v2raytun",
+      "platform": "ios"
+    },
+    {
+      "entry_id": "clash-mi-linux",
+      "core": "mihomo",
+      "sources": [
+        "https://docs.rw/clients#clash-mi-linux",
+        "https://github.com/KaringX/clashmi",
+        "https://github.com/KaringX/clashmi",
+        "https://clashmi.app"
+      ],
+      "name": "Clash Mi",
+      "download_url": "https://github.com/KaringX/clashmi/releases/latest",
+      "app_id": "clash-mi",
+      "platform": "linux"
+    },
+    {
+      "entry_id": "clash-verge-linux",
+      "core": "mihomo",
+      "sources": [
+        "https://docs.rw/clients#clash-verge-linux",
+        "https://github.com/clash-verge-rev/clash-verge-rev",
+        "https://github.com/clash-verge-rev/clash-verge-rev"
+      ],
+      "name": "Clash Verge",
+      "download_url": "https://github.com/clash-verge-rev/clash-verge-rev/releases/latest",
+      "app_id": "clash-verge",
+      "platform": "linux"
+    },
+    {
+      "entry_id": "deskbox-linux",
+      "core": "singbox",
+      "sources": [
+        "https://docs.rw/clients#deskbox-linux",
+        "https://github.com/mihail-jdanov/DeskBox",
+        "https://github.com/mihail-jdanov/DeskBox"
+      ],
+      "name": "DeskBox",
+      "download_url": "https://github.com/mihail-jdanov/DeskBox/releases/latest",
+      "app_id": "deskbox",
+      "platform": "linux"
+    },
+    {
+      "entry_id": "flclash-linux",
+      "core": "mihomo",
+      "sources": [
+        "https://docs.rw/clients#flclash-linux",
+        "https://github.com/chen08209/FlClash",
+        "https://github.com/chen08209/FlClash"
+      ],
+      "name": "FlClash",
+      "download_url": "https://github.com/chen08209/FlClash/releases/latest",
+      "app_id": "flclash",
+      "platform": "linux"
+    },
+    {
+      "entry_id": "flclashx-linux",
+      "core": "mihomo",
+      "sources": [
+        "https://docs.rw/clients#flclashx-linux",
+        "https://github.com/pluralplay/FlClashX",
+        "https://github.com/pluralplay/FlClashX"
+      ],
+      "name": "FlClashX",
+      "download_url": "https://github.com/pluralplay/FlClashX/releases/latest",
+      "app_id": "flclashx",
+      "platform": "linux"
+    },
+    {
+      "entry_id": "flowvy-linux",
+      "core": "mihomo",
+      "sources": [
+        "https://docs.rw/clients#flowvy-linux",
+        "https://github.com/flowvy/desktop",
+        "https://github.com/flowvy/desktop",
+        "https://docs.flowvy.io"
+      ],
+      "name": "Flowvy",
+      "download_url": "https://github.com/flowvy/desktop/releases/latest/download/Flowvy_x64.deb",
+      "app_id": "flowvy",
+      "platform": "linux"
+    },
+    {
+      "entry_id": "happ-linux",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#happ-linux",
+        "https://happ.su/main"
+      ],
+      "name": "Happ",
+      "download_url": "https://github.com/Happ-proxy/happ-desktop/releases/latest",
+      "app_id": "happ",
+      "platform": "linux"
+    },
+    {
+      "entry_id": "hiddify-linux",
+      "core": "singbox",
+      "sources": [
+        "https://docs.rw/clients#hiddify-linux",
+        "https://github.com/hiddify/hiddify-app",
+        "https://github.com/hiddify/hiddify-app"
+      ],
+      "name": "Hiddify",
+      "download_url": "https://github.com/hiddify/hiddify-app/releases",
+      "app_id": "hiddify",
+      "platform": "linux"
+    },
+    {
+      "entry_id": "incy-linux",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#incy-linux",
+        "https://incy.cc/"
+      ],
+      "name": "INCY",
+      "download_url": "https://github.com/INCY-DEV/incy-platforms/releases/latest",
+      "app_id": "incy",
+      "platform": "linux"
+    },
+    {
+      "entry_id": "karing-linux",
+      "core": "singbox",
+      "sources": [
+        "https://docs.rw/clients#karing-linux",
+        "https://github.com/KaringX/karing",
+        "https://github.com/KaringX/karing",
+        "https://karing.app/"
+      ],
+      "name": "Karing",
+      "download_url": "https://github.com/KaringX/karing/releases/latest",
+      "app_id": "karing",
+      "platform": "linux"
+    },
+    {
+      "entry_id": "koalaclash-linux",
+      "core": "mihomo",
+      "sources": [
+        "https://docs.rw/clients#koalaclash-linux",
+        "https://github.com/coolcoala/clash-verge-rev-lite",
+        "https://github.com/coolcoala/clash-verge-rev-lite"
+      ],
+      "name": "Koala Clash",
+      "download_url": "https://github.com/coolcoala/clash-verge-rev-lite/releases/latest",
+      "app_id": "koalaclash",
+      "platform": "linux"
+    },
+    {
+      "entry_id": "onexray-linux",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#onexray-linux",
+        "https://github.com/OneXray/OneXray",
+        "https://github.com/OneXray/OneXray"
+      ],
+      "name": "OneXray",
+      "download_url": "https://github.com/OneXray/OneXray/releases/latest",
+      "app_id": "onexray",
+      "platform": "linux"
+    },
+    {
+      "entry_id": "prizrakbox-linux",
+      "core": "mihomo",
+      "sources": [
+        "https://docs.rw/clients#prizrakbox-linux",
+        "https://github.com/legiz-ru/Prizrak-Box",
+        "https://github.com/legiz-ru/Prizrak-Box"
+      ],
+      "name": "Prizrak-Box",
+      "download_url": "https://github.com/legiz-ru/Prizrak-Box/releases/latest",
+      "app_id": "prizrakbox",
+      "platform": "linux"
+    },
+    {
+      "entry_id": "throne-linux",
+      "core": "singbox",
+      "sources": [
+        "https://docs.rw/clients#throne-linux",
+        "https://github.com/throneproj/Throne",
+        "https://github.com/throneproj/Throne"
+      ],
+      "name": "Throne (Formerly Nekoray)",
+      "download_url": "https://github.com/throneproj/Throne/releases/latest",
+      "app_id": "throne",
+      "platform": "linux"
+    },
+    {
+      "entry_id": "v2rayn-linux",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#v2rayn-linux",
+        "https://github.com/2dust/v2rayN",
+        "https://github.com/2dust/v2rayN",
+        "https://github.com/2dust/v2rayN/wiki"
+      ],
+      "name": "V2rayN",
+      "download_url": "https://github.com/2dust/v2rayN/releases/latest",
+      "app_id": "v2rayn",
+      "platform": "linux"
+    },
+    {
+      "entry_id": "anywhere-macos",
+      "core": "other",
+      "sources": [
+        "https://docs.rw/clients#anywhere-macos",
+        "https://github.com/NodePassProject/Anywhere"
+      ],
+      "name": "Anywhere",
+      "download_url": "https://apps.apple.com/us/app/id6758235178",
+      "app_id": "anywhere",
+      "platform": "macos"
+    },
+    {
+      "entry_id": "clash-mi-macos",
+      "core": "mihomo",
+      "sources": [
+        "https://docs.rw/clients#clash-mi-macos",
+        "https://github.com/KaringX/clashmi",
+        "https://github.com/KaringX/clashmi",
+        "https://clashmi.app"
+      ],
+      "name": "Clash Mi",
+      "download_url": "https://github.com/KaringX/clashmi/releases/latest",
+      "app_id": "clash-mi",
+      "platform": "macos"
+    },
+    {
+      "entry_id": "clash-verge-macos",
+      "core": "mihomo",
+      "sources": [
+        "https://docs.rw/clients#clash-verge-macos",
+        "https://github.com/clash-verge-rev/clash-verge-rev",
+        "https://github.com/clash-verge-rev/clash-verge-rev"
+      ],
+      "name": "Clash Verge",
+      "download_url": "https://github.com/clash-verge-rev/clash-verge-rev/releases/latest",
+      "app_id": "clash-verge",
+      "platform": "macos"
+    },
+    {
+      "entry_id": "clashMac-macos",
+      "core": "mihomo",
+      "sources": [
+        "https://docs.rw/clients#clashMac-macos",
+        "https://clashmac.app/"
+      ],
+      "name": "ClashMac",
+      "download_url": "https://clashmac.app/#download/",
+      "app_id": "clashmac",
+      "platform": "macos"
+    },
+    {
+      "entry_id": "deskbox-macos",
+      "core": "singbox",
+      "sources": [
+        "https://docs.rw/clients#deskbox-macos",
+        "https://github.com/mihail-jdanov/DeskBox",
+        "https://github.com/mihail-jdanov/DeskBox"
+      ],
+      "name": "DeskBox",
+      "download_url": "https://github.com/mihail-jdanov/DeskBox/releases/latest",
+      "app_id": "deskbox",
+      "platform": "macos"
+    },
+    {
+      "entry_id": "flclash-macos",
+      "core": "mihomo",
+      "sources": [
+        "https://docs.rw/clients#flclash-macos",
+        "https://github.com/chen08209/FlClash",
+        "https://github.com/chen08209/FlClash"
+      ],
+      "name": "FlClash",
+      "download_url": "https://github.com/chen08209/FlClash/releases/latest",
+      "app_id": "flclash",
+      "platform": "macos"
+    },
+    {
+      "entry_id": "flclashx-macos",
+      "core": "mihomo",
+      "sources": [
+        "https://docs.rw/clients#flclashx-macos",
+        "https://github.com/pluralplay/FlClashX",
+        "https://github.com/pluralplay/FlClashX"
+      ],
+      "name": "FlClashX",
+      "download_url": "https://github.com/pluralplay/FlClashX/releases/latest",
+      "app_id": "flclashx",
+      "platform": "macos"
+    },
+    {
+      "entry_id": "flowvy-macos",
+      "core": "mihomo",
+      "sources": [
+        "https://docs.rw/clients#flowvy-macos",
+        "https://github.com/flowvy/desktop",
+        "https://github.com/flowvy/desktop",
+        "https://docs.flowvy.io"
+      ],
+      "name": "Flowvy",
+      "download_url": "https://github.com/flowvy/desktop/releases/latest",
+      "app_id": "flowvy",
+      "platform": "macos"
+    },
+    {
+      "entry_id": "happ-macos",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#happ-macos",
+        "https://happ.su/main"
+      ],
+      "name": "Happ",
+      "download_url": "https://apps.apple.com/us/app/happ-proxy-utility/id6504287215",
+      "app_id": "happ",
+      "platform": "macos"
+    },
+    {
+      "entry_id": "hiddify-macos",
+      "core": "singbox",
+      "sources": [
+        "https://docs.rw/clients#hiddify-macos",
+        "https://github.com/hiddify/hiddify-app",
+        "https://github.com/hiddify/hiddify-app"
+      ],
+      "name": "Hiddify",
+      "download_url": "https://github.com/hiddify/hiddify-app/releases",
+      "app_id": "hiddify",
+      "platform": "macos"
+    },
+    {
+      "entry_id": "incy-macos",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#incy-macos",
+        "https://incy.cc/"
+      ],
+      "name": "INCY",
+      "download_url": "https://apps.apple.com/us/app/incy/id6756943388",
+      "app_id": "incy",
+      "platform": "macos"
+    },
+    {
+      "entry_id": "karing-macos",
+      "core": "singbox",
+      "sources": [
+        "https://docs.rw/clients#karing-macos",
+        "https://github.com/KaringX/karing",
+        "https://github.com/KaringX/karing",
+        "https://karing.app/"
+      ],
+      "name": "Karing",
+      "download_url": "https://github.com/KaringX/karing/releases/latest",
+      "app_id": "karing",
+      "platform": "macos"
+    },
+    {
+      "entry_id": "koalaclash-macos",
+      "core": "mihomo",
+      "sources": [
+        "https://docs.rw/clients#koalaclash-macos",
+        "https://github.com/coolcoala/clash-verge-rev-lite",
+        "https://github.com/coolcoala/clash-verge-rev-lite"
+      ],
+      "name": "Koala Clash",
+      "download_url": "https://github.com/coolcoala/clash-verge-rev-lite/releases/latest",
+      "app_id": "koalaclash",
+      "platform": "macos"
+    },
+    {
+      "entry_id": "loon-macos",
+      "core": "other",
+      "sources": [
+        "https://docs.rw/clients#loon-macos",
+        "https://nsloon.app/"
+      ],
+      "name": "Loon",
+      "download_url": "https://apps.apple.com/in/app/loon/id1373567447",
+      "app_id": "loon",
+      "platform": "macos"
+    },
+    {
+      "entry_id": "onexray-macos",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#onexray-macos",
+        "https://github.com/OneXray/OneXray",
+        "https://github.com/OneXray/OneXray"
+      ],
+      "name": "OneXray",
+      "download_url": "https://apps.apple.com/app/onexray/id6503296188",
+      "app_id": "onexray",
+      "platform": "macos"
+    },
+    {
+      "entry_id": "prizrakbox-macos",
+      "core": "mihomo",
+      "sources": [
+        "https://docs.rw/clients#prizrakbox-macos",
+        "https://github.com/legiz-ru/Prizrak-Box",
+        "https://github.com/legiz-ru/Prizrak-Box"
+      ],
+      "name": "Prizrak-Box",
+      "download_url": "https://github.com/legiz-ru/Prizrak-Box/releases/latest",
+      "app_id": "prizrakbox",
+      "platform": "macos"
+    },
+    {
+      "entry_id": "rabbit-hole-macos",
+      "core": "mihomo",
+      "sources": [
+        "https://docs.rw/clients#rabbit-hole-macos",
+        "https://rabbit-hole-1.gitbook.io/rabbit-hole-docs/"
+      ],
+      "name": "Rabbit Hole",
+      "download_url": "https://apps.apple.com/app/rabbithole-vpn-client/id6683309629",
+      "app_id": "rabbit-hole",
+      "platform": "macos"
+    },
+    {
+      "entry_id": "shadowrocket-macos",
+      "core": "other",
+      "sources": [
+        "https://docs.rw/clients#shadowrocket-macos"
+      ],
+      "name": "ShadowRocket",
+      "download_url": "https://apps.apple.com/us/app/shadowrocket/id932747118",
+      "app_id": "shadowrocket",
+      "platform": "macos"
+    },
+    {
+      "entry_id": "singbox-macos",
+      "core": "singbox",
+      "sources": [
+        "https://docs.rw/clients#singbox-macos",
+        "https://github.com/SagerNet/sing-box",
+        "https://github.com/SagerNet/sing-box",
+        "https://sing-box.sagernet.org/"
+      ],
+      "name": "Sing-box",
+      "download_url": "https://apps.apple.com/us/app/sing-box-vt/id6673731168",
+      "app_id": "singbox",
+      "platform": "macos"
+    },
+    {
+      "entry_id": "stash-macos",
+      "core": "other",
+      "sources": [
+        "https://docs.rw/clients#stash-macos",
+        "https://stash.ws/"
+      ],
+      "name": "Stash",
+      "download_url": "https://stash.ws/macos/pricing/",
+      "app_id": "stash",
+      "platform": "macos"
+    },
+    {
+      "entry_id": "streisand-macos",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#streisand-macos"
+      ],
+      "name": "Streisand",
+      "download_url": "https://apps.apple.com/us/app/streisand/id6450534064",
+      "app_id": "streisand",
+      "platform": "macos"
+    },
+    {
+      "entry_id": "throne-macos",
+      "core": "singbox",
+      "sources": [
+        "https://docs.rw/clients#throne-macos",
+        "https://github.com/throneproj/Throne",
+        "https://github.com/throneproj/Throne"
+      ],
+      "name": "Throne (Formerly Nekoray)",
+      "download_url": "https://github.com/throneproj/Throne/releases/latest",
+      "app_id": "throne",
+      "platform": "macos"
+    },
+    {
+      "entry_id": "v2box-macos",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#v2box-macos"
+      ],
+      "name": "V2Box",
+      "download_url": "https://apps.apple.com/app/v2box-v2ray-client/id6446814690",
+      "app_id": "v2box",
+      "platform": "macos"
+    },
+    {
+      "entry_id": "v2rayn-macos",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#v2rayn-macos",
+        "https://github.com/2dust/v2rayN",
+        "https://github.com/2dust/v2rayN",
+        "https://github.com/2dust/v2rayN/wiki"
+      ],
+      "name": "V2rayN",
+      "download_url": "https://github.com/2dust/v2rayN/releases/latest",
+      "app_id": "v2rayn",
+      "platform": "macos"
+    },
+    {
+      "entry_id": "v2raytun-macos",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#v2raytun-macos",
+        "https://v2raytun.com/"
+      ],
+      "name": "V2rayTun",
+      "download_url": "https://apps.apple.com/en/app/v2raytun/id6476628951",
+      "app_id": "v2raytun",
+      "platform": "macos"
+    },
+    {
+      "entry_id": "clash-mi-windows",
+      "core": "mihomo",
+      "sources": [
+        "https://docs.rw/clients#clash-mi-windows",
+        "https://github.com/KaringX/clashmi",
+        "https://github.com/KaringX/clashmi",
+        "https://clashmi.app"
+      ],
+      "name": "Clash Mi",
+      "download_url": "https://github.com/KaringX/clashmi/releases/latest",
+      "app_id": "clash-mi",
+      "platform": "windows"
+    },
+    {
+      "entry_id": "clash-verge-windows",
+      "core": "mihomo",
+      "sources": [
+        "https://docs.rw/clients#clash-verge-windows",
+        "https://github.com/clash-verge-rev/clash-verge-rev",
+        "https://github.com/clash-verge-rev/clash-verge-rev"
+      ],
+      "name": "Clash Verge",
+      "download_url": "https://github.com/clash-verge-rev/clash-verge-rev/releases/latest",
+      "app_id": "clash-verge",
+      "platform": "windows"
+    },
+    {
+      "entry_id": "deskbox-windows",
+      "core": "singbox",
+      "sources": [
+        "https://docs.rw/clients#deskbox-windows",
+        "https://github.com/mihail-jdanov/DeskBox",
+        "https://github.com/mihail-jdanov/DeskBox"
+      ],
+      "name": "DeskBox",
+      "download_url": "https://github.com/mihail-jdanov/DeskBox/releases/latest",
+      "app_id": "deskbox",
+      "platform": "windows"
+    },
+    {
+      "entry_id": "flclash-windows",
+      "core": "mihomo",
+      "sources": [
+        "https://docs.rw/clients#flclash-windows",
+        "https://github.com/chen08209/FlClash",
+        "https://github.com/chen08209/FlClash"
+      ],
+      "name": "FlClash",
+      "download_url": "https://github.com/chen08209/FlClash/releases/latest",
+      "app_id": "flclash",
+      "platform": "windows"
+    },
+    {
+      "entry_id": "flclashx-windows",
+      "core": "mihomo",
+      "sources": [
+        "https://docs.rw/clients#flclashx-windows",
+        "https://github.com/pluralplay/FlClashX",
+        "https://github.com/pluralplay/FlClashX"
+      ],
+      "name": "FlClashX",
+      "download_url": "https://github.com/pluralplay/FlClashX/releases/latest",
+      "app_id": "flclashx",
+      "platform": "windows"
+    },
+    {
+      "entry_id": "flowvy-windows",
+      "core": "mihomo",
+      "sources": [
+        "https://docs.rw/clients#flowvy-windows",
+        "https://github.com/flowvy/desktop",
+        "https://github.com/flowvy/desktop",
+        "https://docs.flowvy.io"
+      ],
+      "name": "Flowvy",
+      "download_url": "https://github.com/flowvy/desktop/releases/latest/download/Flowvy_x64.exe",
+      "app_id": "flowvy",
+      "platform": "windows"
+    },
+    {
+      "entry_id": "happ-windows",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#happ-windows",
+        "https://happ.su/main"
+      ],
+      "name": "Happ",
+      "download_url": "https://github.com/Happ-proxy/happ-desktop/releases/latest/download/setup-Happ.x64.exe",
+      "app_id": "happ",
+      "platform": "windows"
+    },
+    {
+      "entry_id": "hiddify-windows",
+      "core": "singbox",
+      "sources": [
+        "https://docs.rw/clients#hiddify-windows",
+        "https://github.com/hiddify/hiddify-app",
+        "https://github.com/hiddify/hiddify-app"
+      ],
+      "name": "Hiddify",
+      "download_url": "https://github.com/hiddify/hiddify-app/releases",
+      "app_id": "hiddify",
+      "platform": "windows"
+    },
+    {
+      "entry_id": "incy-windows",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#incy-windows",
+        "https://incy.cc/"
+      ],
+      "name": "INCY",
+      "download_url": "https://github.com/INCY-DEV/incy-platforms/releases/latest",
+      "app_id": "incy",
+      "platform": "windows"
+    },
+    {
+      "entry_id": "inhive-windows",
+      "core": "singbox",
+      "sources": [
+        "https://docs.rw/clients#inhive-windows",
+        "https://inhive.ru"
+      ],
+      "name": "InHive",
+      "download_url": "https://github.com/TwilgateLabs/inhive-windows/releases/latest",
+      "app_id": "inhive",
+      "platform": "windows"
+    },
+    {
+      "entry_id": "karing-windows",
+      "core": "singbox",
+      "sources": [
+        "https://docs.rw/clients#karing-windows",
+        "https://github.com/KaringX/karing",
+        "https://github.com/KaringX/karing",
+        "https://karing.app/"
+      ],
+      "name": "Karing",
+      "download_url": "https://github.com/KaringX/karing/releases/latest",
+      "app_id": "karing",
+      "platform": "windows"
+    },
+    {
+      "entry_id": "koalaclash-windows",
+      "core": "mihomo",
+      "sources": [
+        "https://docs.rw/clients#koalaclash-windows",
+        "https://github.com/coolcoala/clash-verge-rev-lite",
+        "https://github.com/coolcoala/clash-verge-rev-lite"
+      ],
+      "name": "Koala Clash",
+      "download_url": "https://github.com/coolcoala/clash-verge-rev-lite/releases/latest",
+      "app_id": "koalaclash",
+      "platform": "windows"
+    },
+    {
+      "entry_id": "onexray-windows",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#onexray-windows",
+        "https://github.com/OneXray/OneXray",
+        "https://github.com/OneXray/OneXray"
+      ],
+      "name": "OneXray",
+      "download_url": "https://github.com/OneXray/OneXray/releases/latest",
+      "app_id": "onexray",
+      "platform": "windows"
+    },
+    {
+      "entry_id": "prizrakbox-windows",
+      "core": "mihomo",
+      "sources": [
+        "https://docs.rw/clients#prizrakbox-windows",
+        "https://github.com/legiz-ru/Prizrak-Box",
+        "https://github.com/legiz-ru/Prizrak-Box"
+      ],
+      "name": "Prizrak-Box",
+      "download_url": "https://github.com/legiz-ru/Prizrak-Box/releases/latest",
+      "app_id": "prizrakbox",
+      "platform": "windows"
+    },
+    {
+      "entry_id": "renoarx-windows",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#renoarx-windows"
+      ],
+      "name": "RenoarX",
+      "download_url": "https://github.com/RonnyFX/RenoarX/releases/latest",
+      "app_id": "renoarx",
+      "platform": "windows"
+    },
+    {
+      "entry_id": "throne-windows",
+      "core": "singbox",
+      "sources": [
+        "https://docs.rw/clients#throne-windows",
+        "https://github.com/throneproj/Throne",
+        "https://github.com/throneproj/Throne"
+      ],
+      "name": "Throne (Formerly Nekoray)",
+      "download_url": "https://github.com/throneproj/Throne/releases/latest",
+      "app_id": "throne",
+      "platform": "windows"
+    },
+    {
+      "entry_id": "v2rayn-windows",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#v2rayn-windows",
+        "https://github.com/2dust/v2rayN",
+        "https://github.com/2dust/v2rayN",
+        "https://github.com/2dust/v2rayN/wiki"
+      ],
+      "name": "V2rayN",
+      "download_url": "https://github.com/2dust/v2rayN/releases/latest",
+      "app_id": "v2rayn",
+      "platform": "windows"
+    },
+    {
+      "entry_id": "v2raytun-windows",
+      "core": "xray",
+      "sources": [
+        "https://docs.rw/clients#v2raytun-windows",
+        "https://v2raytun.com/"
+      ],
+      "name": "V2rayTun",
+      "download_url": "https://v2raytun.com/",
+      "app_id": "v2raytun",
+      "platform": "windows"
+    }
+  ]
+}

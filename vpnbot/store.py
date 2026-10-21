@@ -44,6 +44,79 @@ class Store:
             "SELECT chat_id, reachable FROM chats WHERE user_id=?", (user_id,)
         ).fetchone()
 
+    def devices(self, user_id: int, email: str, client_ref: str):
+        return self.db.execute(
+            "SELECT * FROM devices WHERE user_id=? AND email=? AND client_ref=? "
+            "ORDER BY created_at,id",
+            (user_id, email, client_ref),
+        ).fetchall()
+
+    def device(self, user_id: int, device_id: str):
+        row = self.db.execute(
+            "SELECT * FROM devices WHERE user_id=? AND id=?", (user_id, device_id)
+        ).fetchone()
+        if row is None:
+            raise ActionExpired("Устройство удалено или принадлежит другому пользователю")
+        return row
+
+    def save_device(self, user_id, email, client_ref, platform, app_id, name=""):
+        with self.db:
+            if not name:
+                from .catalog import PLATFORMS, get_app
+
+                base = f"{PLATFORMS[platform]} — {get_app(app_id)['name']}"
+                names = {
+                    r[0]
+                    for r in self.db.execute("SELECT name FROM devices WHERE user_id=?", (user_id,))
+                }
+                name, number = base, 2
+                while name in names:
+                    name, number = f"{base} {number}", number + 1
+            device_id = secrets.token_urlsafe(12)
+            now = time.time()
+            self.db.execute(
+                "INSERT INTO devices VALUES (?,?,?,?,?,?,?,?,?)",
+                (device_id, user_id, email, client_ref, platform, app_id, name, now, now),
+            )
+        return self.device(user_id, device_id)
+
+    def edit_device(self, user_id, device_id, *, name=None, app_id=None):
+        with self.db:
+            row = self.device(user_id, device_id)
+            self.db.execute(
+                "UPDATE devices SET name=?,app_id=?,updated_at=? WHERE user_id=? AND id=?",
+                (
+                    name if name is not None else row["name"],
+                    app_id if app_id is not None else row["app_id"],
+                    time.time(),
+                    user_id,
+                    device_id,
+                ),
+            )
+
+    def delete_device(self, user_id, device_id):
+        with self.db:
+            self.device(user_id, device_id)
+            self.db.execute("DELETE FROM devices WHERE user_id=? AND id=?", (user_id, device_id))
+
+    def name_prompt(self, user_id, chat_id, prompt_id, anchor_id, payload):
+        with self.db:
+            self.db.execute(
+                "INSERT INTO device_inputs VALUES (?,?,?,?,?,?) ON CONFLICT(user_id) DO UPDATE "
+                "SET chat_id=excluded.chat_id,prompt_id=excluded.prompt_id,"
+                "anchor_id=excluded.anchor_id,payload=excluded.payload,expires=excluded.expires",
+                (user_id, chat_id, prompt_id, anchor_id, json.dumps(payload), time.time() + 600),
+            )
+
+    def pending_name(self, user_id):
+        return self.db.execute(
+            "SELECT * FROM device_inputs WHERE user_id=? AND expires>?", (user_id, time.time())
+        ).fetchone()
+
+    def clear_name(self, user_id):
+        with self.db:
+            self.db.execute("DELETE FROM device_inputs WHERE user_id=?", (user_id,))
+
     def recipients(self, allowed: set[int]) -> list[int]:
         return [
             r[0]

@@ -146,13 +146,32 @@ class PostgresStore(Store):
             "updates",
             "work_lock",
         }
-        if required <= {row[0] for row in secured}:
-            return
-        schema = Path(__file__).with_name("schema.sql").read_text()
+        if not required <= {row[0] for row in secured}:
+            schema = Path(__file__).with_name("schema.sql").read_text()
+            with self.raw.transaction():
+                for statement in schema.split(";"):
+                    if statement.strip():
+                        self.raw.execute(statement)
         with self.raw.transaction():
-            for statement in schema.split(";"):
-                if statement.strip():
-                    self.raw.execute(statement)
+            if (
+                self.raw.execute("SELECT to_regclass('vpn_bot.schema_migrations')").fetchone()[0]
+                is None
+            ):
+                self.raw.execute(
+                    "CREATE TABLE IF NOT EXISTS vpn_bot.schema_migrations "
+                    "(version TEXT PRIMARY KEY, applied_at TIMESTAMPTZ NOT NULL DEFAULT now())"
+                )
+                self.raw.execute("ALTER TABLE vpn_bot.schema_migrations ENABLE ROW LEVEL SECURITY")
+            versions = {r[0] for r in self.raw.execute("SELECT version FROM schema_migrations")}
+            for migration in sorted(Path(__file__).with_name("migrations").glob("*.sql")):
+                if migration.name in versions:
+                    continue
+                for statement in migration.read_text().split(";"):
+                    if statement.strip():
+                        self.raw.execute(statement)
+                self.raw.execute(
+                    "INSERT INTO schema_migrations(version) VALUES (%s)", (migration.name,)
+                )
 
     def close(self):
         try:

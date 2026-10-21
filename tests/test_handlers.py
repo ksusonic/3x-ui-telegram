@@ -7,7 +7,15 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.client.session.base import BaseSession
 from aiogram.enums import ParseMode
 from aiogram.methods import AnswerCallbackQuery, GetMe, SendMessage
-from aiogram.types import CallbackQuery, Chat, Message, MessageEntity, Update, User
+from aiogram.types import (
+    CallbackQuery,
+    Chat,
+    InlineKeyboardMarkup,
+    Message,
+    MessageEntity,
+    Update,
+    User,
+)
 
 from vpnbot.handlers import create_router, status_text
 from vpnbot.panel import PanelError, fingerprint
@@ -33,7 +41,11 @@ class RecordingSession(BaseSession):
             chat=Chat(id=int(method.chat_id), type="private"),
             from_user=User(id=bot.id, is_bot=True, first_name="VPN"),
             text=getattr(method, "text", None),
-            reply_markup=getattr(method, "reply_markup", None),
+            reply_markup=(
+                method.reply_markup
+                if isinstance(getattr(method, "reply_markup", None), InlineKeyboardMarkup)
+                else None
+            ),
         )
 
     async def stream_content(self, *args, **kwargs):
@@ -70,7 +82,7 @@ class FakePanel:
         row = await self.client(email)
         if row["tgId"] != user_id:
             raise PanelError("Чужое подключение")
-        return ["vless://private-key@vpn.example:443"], ""
+        return getattr(self, "links_result", ["vless://private-key@vpn.example:443"]), ""
 
 
 @pytest.fixture
@@ -84,7 +96,9 @@ async def harness(config, client, store):
     dispatcher.include_router(create_router(config, panel, store))
     seq = 0
 
-    async def send(user_id, text=None, callback=None, chat_type="private", chat_id=None):
+    async def send(
+        user_id, text=None, callback=None, chat_type="private", chat_id=None, reply_to=None
+    ):
         nonlocal seq
         seq += 1
         user = User(id=user_id, is_bot=False, first_name="Person")
@@ -125,6 +139,7 @@ async def harness(config, client, store):
                     from_user=user,
                     text=text,
                     entities=entities,
+                    reply_to_message=reply_to,
                 ),
             )
         start = len(session.calls)
@@ -328,8 +343,7 @@ async def test_user_cannot_use_admin_confirmation(harness):
 async def test_key_callback_is_bound_to_user_and_rechecks_revocation(harness):
     send, panel, store = harness
     panel.rows.append({**panel.rows[0], "email": "bob", "tgId": 300})
-    response = messages(await send(200, "/connections"))[0]
-    callback = button(response, "key")
+    callback = "key:" + store.action(200, "key", {"email": "alice"})
     await send(300, callback=callback)
     assert not panel.link_calls
     panel.rows[0]["tgId"] = 0
@@ -340,8 +354,8 @@ async def test_key_callback_is_bound_to_user_and_rechecks_revocation(harness):
 
 async def test_authorized_key_includes_qr(harness):
     send, panel, store = harness
-    response = messages(await send(200, "/connections"))[0]
-    calls = await send(200, callback=button(response, "key"))
+    callback = "key:" + store.action(200, "key", {"email": "alice"})
+    calls = await send(200, callback=callback)
     from aiogram.methods import SendPhoto
 
     assert any(isinstance(c, SendPhoto) and c.protect_content for c in calls)
@@ -364,9 +378,9 @@ async def test_broadcast_deduplicates_and_respects_confirmation(harness):
 
 async def test_panel_outage_fails_closed_for_existing_buttons(harness):
     send, panel, store = harness
-    response = messages(await send(200, "/connections"))[0]
+    callback = "key:" + store.action(200, "key", {"email": "alice"})
     panel.unavailable = True
-    assert not await send(200, callback=button(response, "key"))
+    assert not await send(200, callback=callback)
     assert not panel.link_calls
 
 

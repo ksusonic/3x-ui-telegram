@@ -9,3 +9,5 @@ tests
 .vercel
 supabase
 .github
+tools
+docs

@@ -60,7 +60,8 @@ def store():
     assert db.try_lock(), "Test database is in use"
     db.initialize()
     db.db.execute(
-        "TRUNCATE chats,actions,jobs,deliveries,audit,cooldown,updates RESTART IDENTITY CASCADE"
+        "TRUNCATE chats,actions,jobs,deliveries,audit,cooldown,updates,devices,device_inputs "
+        "RESTART IDENTITY CASCADE"
     )
     yield db
     db.close()

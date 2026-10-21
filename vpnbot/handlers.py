@@ -15,18 +15,13 @@ from aiogram.types import (
 )
 from qrcode.exceptions import DataOverflowError
 
+from .cabinet import Cabinet
 from .config import Config
 from .panel import Panel, PanelError, fingerprint, telegram_id
 from .store import ActionExpired, Store
 
 log = logging.getLogger(__name__)
 PAGE_SIZE = 8
-INSTRUCTION = (
-    "Откройте «Мои подключения», выберите нужное и скопируйте ссылку "
-    "в VPN-приложение через импорт из буфера обмена. Можно также отсканировать QR-код.\n\n"
-    "Если показана ссылка подписки, импортируйте её в приложении как подписку. "
-    "Не передавайте ссылки и QR-коды другим людям: они дают доступ к вашему VPN."
-)
 
 
 def esc(value) -> str:
@@ -141,32 +136,22 @@ def create_router(config: Config, panel: Panel, store: Store) -> Router:
     guard = Guard(config, panel, store)
     router.message.outer_middleware(guard)
     router.callback_query.outer_middleware(guard)
+    cabinet = Cabinet(panel, store)
+    cabinet.register(router)
 
     async def connections(message: Message, user_id: int):
-        clients = await panel.owned(user_id)
-        if not clients:
-            await message.answer("К вашему Telegram ID пока не привязаны подключения")
-            return
-        rows = []
-        for client in clients:
-            token = store.action(user_id, "key", {"email": client["email"]}, ttl=3600)
-            rows.append([(client["email"][:60], f"key:{token}")])
-        # Telegram accepts at most 100 buttons per message.
-        for offset in range(0, len(rows), 80):
-            await message.answer(
-                "Ваши подключения:", reply_markup=markup(rows[offset : offset + 80])
-            )
+        await cabinet.home(message, user_id)
 
     async def status(message: Message, user_id: int):
-        clients = await panel.owned(user_id)
-        if not clients:
-            await message.answer("К вашему Telegram ID пока не привязаны подключения")
-        for client in clients:
-            await message.answer(status_text(client))
+        await cabinet.home(message, user_id)
 
     @router.message(F.chat.type == "private", CommandStart())
     @router.message(F.chat.type == "private", Command("help"))
     async def start(message: Message, is_admin: bool):
+        command = (message.text or "").split()[0].split("@")[0]
+        if not is_admin or (command == "/start" and await panel.owned(message.from_user.id)):
+            await cabinet.home(message, message.from_user.id)
+            return
         text = "Личный кабинет VPN. Выберите действие."
         if is_admin:
             text += (
@@ -195,17 +180,13 @@ def create_router(config: Config, panel: Panel, store: Store) -> Router:
 
     @router.message(Command("instruction"))
     async def instruction_command(message: Message):
-        await message.answer(INSTRUCTION)
+        await cabinet.home(message, message.from_user.id)
 
     @router.callback_query(F.data.startswith("menu:"))
     async def menu_callback(query: CallbackQuery):
         operation = query.data.split(":", 1)[1]
-        if operation == "connections":
-            await connections(query.message, query.from_user.id)
-        elif operation == "status":
-            await status(query.message, query.from_user.id)
-        elif operation == "instruction":
-            await query.message.answer(INSTRUCTION)
+        if operation in {"connections", "status", "instruction"}:
+            await cabinet.home(query.message, query.from_user.id, edit=True)
 
     @router.callback_query(F.data.startswith("key:"))
     async def key_callback(query: CallbackQuery):
