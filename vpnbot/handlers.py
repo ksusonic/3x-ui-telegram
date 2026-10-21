@@ -77,13 +77,22 @@ class Guard(BaseMiddleware):
 
     async def __call__(self, handler, event: Message | CallbackQuery, data):
         message = event if isinstance(event, Message) else event.message
-        if not isinstance(message, Message) or message.chat.type != "private":
+        if not isinstance(message, Message) or event.from_user is None:
             return
         user_id = event.from_user.id
         authorized = user_id in self.config.admin_ids
-        # Any incoming private interaction proves the user has opened this bot.
-        # Recording a contact never grants access to VPN clients.
-        self.store.register(user_id, message.chat.id)
+        private = message.chat.type == "private"
+        if not private and (
+            message.chat.type not in {"group", "supergroup"}
+            or message.chat.id not in self.config.admin_chat_ids
+            or not authorized
+            or (isinstance(event, Message) and event.sender_chat is not None)
+        ):
+            return
+        # A group interaction does not prove a private chat exists.
+        # Recording a private contact never grants access to VPN clients.
+        if private:
+            self.store.register(user_id, message.chat.id)
         try:
             is_admin = user_id in self.config.admin_ids
             clients = [] if is_admin else await self.panel.owned(user_id)
@@ -93,6 +102,19 @@ class Guard(BaseMiddleware):
             # Acknowledge callbacks before slower API operations to avoid query expiry.
             if isinstance(event, CallbackQuery):
                 await event.answer()
+            if not private:
+                words = (event.text or "").split() if isinstance(event, Message) else []
+                command = words[0].split("@", 1)[0] if words else ""
+                personal = (
+                    event.data and event.data.startswith(("key:", "menu:"))
+                    if isinstance(event, CallbackQuery)
+                    else command in {"/connections", "/status", "/instruction"}
+                )
+                if personal:
+                    await message.answer(
+                        "Личные подключения и статус доступны в личном чате с ботом"
+                    )
+                    return
             data.update(clients=clients, is_admin=is_admin)
             return await handler(event, data)
         except (PanelError, ActionExpired, ValueError) as exc:
@@ -145,7 +167,8 @@ def create_router(config: Config, panel: Panel, store: Store) -> Router:
     @router.message(CommandStart())
     @router.message(Command("help"))
     async def start(message: Message, is_admin: bool):
-        text = "Личный кабинет VPN. Выберите действие."
+        private = message.chat.type == "private"
+        text = "Личный кабинет VPN. Выберите действие." if private else "Управление VPN в группе."
         if is_admin:
             text += (
                 "\n\nКоманды администратора:\n"
@@ -157,7 +180,7 @@ def create_router(config: Config, panel: Panel, store: Store) -> Router:
                 "/jobs — последние рассылки\n"
                 "/id — мой Telegram ID"
             )
-        await message.answer(text, reply_markup=menu())
+        await message.answer(text, reply_markup=menu() if private else None)
 
     @router.message(Command("id"))
     async def own_id(message: Message):

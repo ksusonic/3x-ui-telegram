@@ -25,12 +25,18 @@ class Config:
     panel_token: str = field(default="", repr=False)
     subscription_url: str = ""
     ca_file: str = ""
+    admin_chat_ids: frozenset[int] = frozenset()
 
     @classmethod
     def from_env(cls, *, panel_only: bool = False) -> "Config":
         token = os.environ.get("BOT_TOKEN", "").strip()
         ids = os.environ.get("ADMIN_IDS", "")
         admins = frozenset(int(x.strip()) for x in ids.split(",") if x.strip())
+        groups = frozenset(
+            int(x.strip()) for x in os.environ.get("ADMIN_CHAT_IDS", "").split(",") if x.strip()
+        )
+        if any(x >= 0 for x in groups):
+            raise ValueError("ADMIN_CHAT_IDS: нужны отрицательные числовые ID групп")
         if not panel_only and (not token or not admins or any(x <= 0 for x in admins)):
             raise ValueError("Задайте BOT_TOKEN и положительные числовые ADMIN_IDS")
         panel_token = os.environ.get("PANEL_API_TOKEN", "").strip()
@@ -40,6 +46,7 @@ class Config:
         return cls(
             panel_url=https_prefix(os.environ.get("PANEL_BASE_URL", ""), "PANEL_BASE_URL"),
             admin_ids=admins,
+            admin_chat_ids=groups,
             token=token,
             panel_token=panel_token,
             subscription_url=https_prefix(sub, "SUBSCRIPTION_BASE_URL") if sub else "",

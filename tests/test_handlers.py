@@ -82,11 +82,14 @@ async def harness(config, client, store):
     dispatcher.include_router(create_router(config, panel, store))
     seq = 0
 
-    async def send(user_id, text=None, callback=None, chat_type="private"):
+    async def send(user_id, text=None, callback=None, chat_type="private", chat_id=None):
         nonlocal seq
         seq += 1
         user = User(id=user_id, is_bot=False, first_name="Person")
-        chat = Chat(id=user_id if chat_type == "private" else -100, type=chat_type)
+        chat = Chat(
+            id=chat_id if chat_id is not None else (user_id if chat_type == "private" else -100),
+            type=chat_type,
+        )
         if callback:
             message = Message(
                 message_id=seq,
@@ -157,6 +160,49 @@ async def test_group_commands_do_nothing_even_for_admin(harness):
     send, panel, store = harness
     assert not await send(100, "/link 300 alice", chat_type="group")
     assert not panel.bind_calls
+    assert store.contact(100) is None
+
+
+async def test_allowed_group_admin_commands_do_not_register_private_chat(harness, config):
+    send, panel, store = harness
+    object.__setattr__(config, "admin_chat_ids", frozenset({-2387748729}))
+    replies = messages(await send(100, "/users", chat_type="group", chat_id=-2387748729))
+    assert "alice" in replies[0].text
+    assert replies[0].chat_id == -2387748729
+    assert store.contact(100) is None
+    store.register(100, 100)
+    await send(100, "/help", chat_type="group", chat_id=-2387748729)
+    assert store.contact(100)["chat_id"] == 100
+
+
+async def test_allowed_group_ignores_nonadmins_and_unauthorized_callbacks(harness, config):
+    send, panel, store = harness
+    object.__setattr__(config, "admin_chat_ids", frozenset({-100}))
+    for user_id in (200, 999):
+        assert not await send(user_id, "/users", chat_type="supergroup")
+        assert not await send(user_id, callback="menu:connections", chat_type="supergroup")
+        assert store.contact(user_id) is None
+    assert not panel.bind_calls
+
+
+@pytest.mark.parametrize(
+    "interaction",
+    [
+        {"text": "/connections"},
+        {"text": "/connections\nfoo"},
+        {"text": "/status"},
+        {"callback": "key:private-token"},
+        {"callback": "menu:connections"},
+    ],
+)
+async def test_group_does_not_expose_personal_connections(harness, config, interaction):
+    send, panel, store = harness
+    object.__setattr__(config, "admin_chat_ids", frozenset({-100}))
+    panel.rows[0]["tgId"] = 100
+    replies = messages(await send(100, chat_type="group", **interaction))
+    assert len(replies) == 1
+    assert "в личном чате" in replies[0].text
+    assert not panel.link_calls
     assert store.contact(100) is None
 
 
