@@ -1,4 +1,5 @@
 import json
+import math
 import secrets
 import sqlite3
 import time
@@ -40,6 +41,9 @@ class Store:
             );
             CREATE TABLE IF NOT EXISTS cooldown (
                 id INTEGER PRIMARY KEY CHECK(id=1), until_at REAL NOT NULL
+            );
+            CREATE TABLE IF NOT EXISTS updates (
+                update_id INTEGER PRIMARY KEY, processed_at REAL NOT NULL
             );
         """)
         self.db.commit()
@@ -123,7 +127,12 @@ class Store:
         # Consume confirmation and create the durable queue in the same transaction.
         with self.db:
             data = self.read_action(token, actor, "send")
-            self.db.execute("UPDATE actions SET consumed=1 WHERE token=?", (token,))
+            changed = self.db.execute(
+                "UPDATE actions SET consumed=1 WHERE token=? AND consumed=0",
+                (token,),
+            ).rowcount
+            if changed != 1:
+                raise ActionExpired("Кнопка уже использована")
             cursor = self.db.execute(
                 "INSERT INTO jobs(actor,body,created) VALUES (?,?,?)",
                 (actor, data["body"], time.time()),
@@ -194,6 +203,42 @@ class Store:
     def reported(self, job: int):
         with self.db:
             self.db.execute("UPDATE jobs SET reported=1 WHERE id=?", (job,))
+
+    def recent_jobs(self):
+        return self.db.execute(
+            "SELECT id,finished FROM jobs ORDER BY id DESC LIMIT 10",
+        ).fetchall()
+
+    def update_done(self, update_id: int) -> bool:
+        return (
+            self.db.execute(
+                "SELECT 1 FROM updates WHERE update_id=?",
+                (update_id,),
+            ).fetchone()
+            is not None
+        )
+
+    def mark_update(self, update_id: int):
+        with self.db:
+            self.db.execute(
+                "INSERT INTO updates VALUES (?,?) ON CONFLICT DO NOTHING", (update_id, time.time())
+            )
+            self.db.execute(
+                "DELETE FROM updates WHERE processed_at < ?", (time.time() - 7 * 86400,)
+            )
+
+    def continuation_delay(self) -> int | None:
+        pending = self.db.execute(
+            "SELECT MIN(ready_at) FROM deliveries WHERE state='pending'",
+        ).fetchone()[0]
+        reports = self.db.execute("SELECT 1 FROM jobs WHERE reported=0 LIMIT 1").fetchone()
+        if pending is None and not reports:
+            return None
+        ready = time.time() if pending is None else pending
+        cooldown = self.db.execute("SELECT until_at FROM cooldown WHERE id=1").fetchone()
+        if cooldown:
+            ready = max(ready, cooldown[0])
+        return max(1, math.ceil(ready - time.time()))
 
     def audit(self, actor: int, operation: str, **detail):
         with self.db:

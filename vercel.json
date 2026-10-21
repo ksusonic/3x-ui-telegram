@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "fastapi",
+  "regions": ["fra1"],
+  "functions": {
+    "vpnbot/web.py": {
+      "maxDuration": 300,
+      "excludeFiles": "{tests/**,deploy/**,.env*,.venv/**,**/__pycache__/**,*.sqlite3*}"
+    }
+  }
+}

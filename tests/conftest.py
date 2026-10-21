@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import pytest
@@ -51,8 +52,21 @@ def client():
     }
 
 
-@pytest.fixture
-def store():
-    db = Store(":memory:")
+@pytest.fixture(params=["sqlite", "postgres"])
+def store(request):
+    if request.param == "postgres":
+        url = os.environ.get("TEST_DATABASE_URL")
+        if not url:
+            pytest.skip("Set TEST_DATABASE_URL to a disposable PostgreSQL database")
+        from vpnbot.postgres import PostgresStore
+
+        db = PostgresStore(url, require_tls=False)
+        assert db.try_lock(), "Test database is in use"
+        db.initialize()
+        db.db.execute(
+            "TRUNCATE chats,actions,jobs,deliveries,audit,cooldown,updates RESTART IDENTITY CASCADE"
+        )
+    else:
+        db = Store(":memory:")
     yield db
     db.close()

@@ -432,7 +432,7 @@ def create_router(config: Config, panel: Panel, store: Store) -> Router:
     async def jobs_command(message: Message, is_admin: bool):
         if not await require_admin(message, is_admin):
             return
-        jobs = store.db.execute("SELECT id,finished FROM jobs ORDER BY id DESC LIMIT 10").fetchall()
+        jobs = store.recent_jobs()
         for job in jobs:
             counts = ", ".join(f"{key}: {value}" for key, value in store.counts(job["id"]).items())
             await message.answer(
